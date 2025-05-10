@@ -95,90 +95,91 @@
   <div class="lyrics" id="lyrics">Sözler burada çıkacak...</div>
 
   <script>
-    const lyrics = [
-      { time: 0.0, text: "♪" },
-      { time: 27.3, text: "Çocuktuk sadece" },
-      { time: 34.0, text: "Hayallerimiz ve kalplerimiz aynı ritimdeydi" },
-      { time: 40.3, text: "♪" },
-      { time: 43.0, text: "Atla gemimize" },
-      { time: 49.0, text: "İstesen de istemesen de gidiyoruz" },
-      { time: 59.1, text: "İstesen de istemesen de..." },
-      { time: 65.0, text: "♪" },
-      { time: 85.0, text: "Denize yelken açtık" },
-      { time: 91.5, text: "Amaçsızca," },
-      { time: 94.0, text: "bir yönümüz ya da takvimimiz olmadan" },
-      { time: 99.3, text: "Varmaya çalıştığımız kıyı" },
-      { time: 104.0, text: "Önceden de görmüştük, konuşmadan ya da tek kelime paylaşmadan" },
-      { time: 107.4, text: "Gerek yok duyulmasına gerçek düşüncelerinin" },
-      { time: 124.1, text: "Sen, kelimelerle ifade edilemeyecek kadar güzelsin" },
-      { time: 132.0, text: "♪" },
-      { time: 150.0, text: "Gitme altınlarla döşenmiş yollardan" },
-      { time: 159.0, text: "Seni hüsrana uğratacak onlar" },
-      { time: 164.5, text: "Bulduklarını paylaşmazsan eğer, bunun ne eğlencesi var?" },
-      { time: 172.1, text: "İnşa etmesi yıllar sürer, saniyeler içinde yıkılır" },
-      { time: 181.0, text: "Kimse beni teselli etmeyecek" },
-      { time: 187.0, text: "Beni tanımayacak ya da içimde ne olup bittiğini bilmeyecek" },
-      { time: 195.15, text: "Terkedilmiş bir boşluk, kalacak eskisi gibi" },
-      { time: 203.0, text: "Bana orada bir zamanlar yalanlar olduğunu hatırlatacak" },
-      { time: 210.05, text: "♪" },
-      { time: 231.0, text: "Bununla yaşarken öğrendim" },
-      { time: 237.0, text: "Hayatım boyunca okuduklarımdan daha fazlasını" },
-      { time: 247.0, text: "Bu satıra gülümsediğini tahmin ediyorum" },
-      { time: 251.0, text: "♪" },
-      { time: 253.5, text: "O hissi özlüyorum" },
-      { time: 260.0, text: "Dokunuş, öpüşün.. zihnimde hayali ağır bir yük gibi" },
-      { time: 268.0, text: "Hatıralarımız ebediyen mühürlendi zamanda" },
-      { time: 276.0, text: "Sırrımız senin olduğu kadar benim de" },
-      { time: 283.3, text: "Tüm mantığı çoktan ardımızda bıraktık" },
-      { time: 290.0, text: "♪" },
-      { time: 293.2, text: "Ve seni, ölünceye dek tutacağım içimde" },
-      { time: 298.0, text: "♪" }
-    ];
+  const lyrics = [
+    { time: 0.0, text: "♪" },
+    { time: 27.3, text: "Çocuktuk sadece" },
+    { time: 34.0, text: "Hayallerimiz ve kalplerimiz aynı ritimdeydi" },
+    { time: 40.3, text: "♪" },
+    { time: 43.0, text: "Atla gemimize" },
+    { time: 49.0, text: "İstesen de istemesen de gidiyoruz" },
+    { time: 59.1, text: "İstesen de istemesen de..." },
+    { time: 65.0, text: "♪" },
+    { time: 85.0, text: "Denize yelken açtık" },
+    { time: 91.5, text: "Amaçsızca," },
+    { time: 94.0, text: "bir yönümüz ya da takvimimiz olmadan" },
+    { time: 99.3, text: "Varmaya çalıştığımız kıyı" },
+    { time: 104.0, text: "Önceden de görmüştük, konuşmadan ya da tek kelime paylaşmadan" },
+    { time: 107.4, text: "Gerek yok duyulmasına gerçek düşüncelerinin" },
+    { time: 124.1, text: "Sen, kelimelerle ifade edilemeyecek kadar güzelsin" },
+    { time: 132.0, text: "♪" },
+    { time: 150.0, text: "Gitme altınlarla döşenmiş yollardan" },
+    { time: 159.0, text: "Seni hüsrana uğratacak onlar" },
+    { time: 164.5, text: "Bulduklarını paylaşmazsan eğer, bunun ne eğlencesi var?" },
+    { time: 172.1, text: "İnşa etmesi yıllar sürer, saniyeler içinde yıkılır" },
+    { time: 181.0, text: "Kimse beni teselli etmeyecek" },
+    { time: 187.0, text: "Beni tanımayacak ya da içimde ne olup bittiğini bilmeyecek" },
+    { time: 195.15, text: "Terkedilmiş bir boşluk, kalacak eskisi gibi" },
+    { time: 203.0, text: "Bana orada bir zamanlar yalanlar olduğunu hatırlatacak" },
+    { time: 210.05, text: "♪" },
+    { time: 231.0, text: "Bununla yaşarken öğrendim" },
+    { time: 237.0, text: "Hayatım boyunca okuduklarımdan daha fazlasını" },
+    { time: 247.0, text: "Bu satıra gülümsediğini tahmin ediyorum" },
+    { time: 251.0, text: "♪" },
+    { time: 253.5, text: "O hissi özlüyorum" },
+    { time: 260.0, text: "Dokunuş, öpüşün.. zihnimde hayali ağır bir yük gibi" },
+    { time: 268.0, text: "Hatıralarımız ebediyen mühürlendi zamanda" },
+    { time: 276.0, text: "Sırrımız senin olduğu kadar benim de" },
+    { time: 283.3, text: "Tüm mantığı çoktan ardımızda bıraktık" },
+    { time: 290.0, text: "♪" },
+    { time: 293.2, text: "Ve seni, ölünceye dek tutacağım içimde" },
+    { time: 298.0, text: "♪" }
+  ];
 
-    const audio = document.getElementById('audio');
-    const lyricsContainer = document.getElementById('lyrics');
-    const playButton = document.getElementById('playButton');
-    const pauseButton = document.getElementById('pauseButton');
-    const backButton = document.getElementById('backButton');
-    const forwardButton = document.getElementById('forwardButton');
-    let currentLine = -1;
+  const audio = document.getElementById('audio');
+  const lyricsContainer = document.getElementById('lyrics');
+  const playButton = document.getElementById('playButton');
+  const pauseButton = document.getElementById('pauseButton');
+  const backButton = document.getElementById('backButton');
+  const forwardButton = document.getElementById('forwardButton');
+  let currentLine = -1;
 
-    playButton.addEventListener('click', () => {
-      audio.play();
-      playButton.style.display = 'none';
-      pauseButton.style.display = 'inline-block';
-    });
-
-    pauseButton.addEventListener('click', () => {
-      audio.pause();
-      pauseButton.style.display = 'none';
-      playButton.style.display = 'inline-block';
-    });
-
-    backButton.addEventListener('click', () => {
-      audio.currentTime = Math.max(0, audio.currentTime - 10);
-    });
-
-    forwardButton.addEventListener('click', () => {
-      audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
-    });
-
-    audio.addEventListener('timeupdate', () => {
-      const currentTime = audio.currentTime;
-      for (let i = lyrics.length - 1; i >= 0; i--) {
-        if (currentTime >= lyrics[i].time) {
-          if (currentLine !== i) {
-            lyricsContainer.textContent = lyrics[i].text;
-            lyricsContainer.classList.remove('visible');
-            void lyricsContainer.offsetWidth;
-            lyricsContainer.classList.add('visible');
-            currentLine = i;
-          }
-          break;
+  function updateLyrics() {
+    const currentTime = audio.currentTime;
+    for (let i = lyrics.length - 1; i >= 0; i--) {
+      if (currentTime >= lyrics[i].time) {
+        if (currentLine !== i) {
+          lyricsContainer.textContent = lyrics[i].text;
+          lyricsContainer.classList.remove('visible');
+          void lyricsContainer.offsetWidth;
+          lyricsContainer.classList.add('visible');
+          currentLine = i;
         }
+        break;
       }
-    });
-  </script>
+    }
+  }
 
-</body>
-</html>
+  playButton.addEventListener('click', () => {
+    audio.play();
+    playButton.style.display = 'none';
+    pauseButton.style.display = 'inline-block';
+  });
+
+  pauseButton.addEventListener('click', () => {
+    audio.pause();
+    pauseButton.style.display = 'none';
+    playButton.style.display = 'inline-block';
+  });
+
+  backButton.addEventListener('click', () => {
+    audio.currentTime = Math.max(0, audio.currentTime - 10);
+    updateLyrics(); // Ekleme
+  });
+
+  forwardButton.addEventListener('click', () => {
+    audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+    updateLyrics(); // Ekleme
+  });
+
+  audio.addEventListener('timeupdate', updateLyrics);
+</script>
