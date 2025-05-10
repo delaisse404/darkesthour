@@ -1,188 +1,164 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Friends Make Garbage</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       margin: 0;
       padding: 0;
-      background-color: black;
+      background: black;
       color: white;
       font-family: Arial, sans-serif;
       overflow: hidden;
+    }
+    .container {
       position: relative;
       height: 100vh;
-    }
-
-    .lyrics {
-      position: absolute;
-      top: 20%;
       width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    #lyrics {
+      font-size: 5vw;
       text-align: center;
-      font-size: 2.3em;
-      font-style: italic;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
       opacity: 0;
-      transition: opacity 1.2s ease-in-out;
-      z-index: 2;
-      padding: 0 10px;
-      box-sizing: border-box;
+      transition: opacity 0.5s ease;
+      max-width: 90vw;
+      white-space: pre-wrap;
     }
-
-    .lyrics.visible {
-      opacity: 1;
-    }
-
     .controls {
       position: absolute;
-      top: 65%;
-      left: 50%;
-      transform: translateX(-50%);
+      bottom: 5%;
       display: flex;
-      gap: 15px;
+      justify-content: center;
       align-items: center;
-      z-index: 3;
+      gap: 1rem;
     }
-
-    .controls button {
-      padding: 14px 24px;
-      font-size: 1.2em;
-      background-color: #222;
-      color: white;
+    .btn {
+      padding: 0.6rem 1rem;
+      font-size: 1.2rem;
       border: none;
       border-radius: 8px;
+      background: white;
+      color: black;
       cursor: pointer;
-      box-shadow: 0 0 10px rgba(255,255,255,0.2);
     }
-
     @media (max-width: 600px) {
-      .lyrics {
-        font-size: 1.6em;
-        top: 15%;
+      #lyrics {
+        font-size: 6vw;
       }
-
-      .controls {
-        top: 75%;
-        flex-direction: row;
+      .btn {
+        font-size: 1rem;
+        padding: 0.5rem 0.8rem;
       }
-
-      .controls button {
-        padding: 12px 20px;
-        font-size: 1em;
-      }
-    }
-
-    audio {
-      display: none;
     }
   </style>
 </head>
 <body>
 
-  <audio id="audio">
-    <source src="FriendsMakeGarbage.mp3" type="audio/mp3">
-    Tarayıcınız audio elementini desteklemiyor.
-  </audio>
-
+<div class="container">
+  <div id="lyrics">Sözler burada çıkacak</div>
   <div class="controls">
-    <button id="backButton">⏪ 10s</button>
-    <button id="playButton">▶ Dinlemeye Başla</button>
-    <button id="pauseButton" style="display: none;">⏸ Durdur</button>
-    <button id="forwardButton">10s ⏩</button>
+    <button class="btn" onclick="seekAudio(-10)">⏪ 10sn</button>
+    <button class="btn" onclick="togglePlayPause()" id="playPauseBtn">▶ Dinlemeye Başla</button>
+    <button class="btn" onclick="seekAudio(10)">10sn ⏩</button>
   </div>
+  <audio id="audio" src="FriendsMakeGarbage.mp3"></audio>
+</div>
 
-  <div class="lyrics" id="lyrics">Sözler burada çıkacak...</div>
+<script>
+  const audio = document.getElementById("audio");
+  const playPauseBtn = document.getElementById("playPauseBtn");
+  const lyricText = document.getElementById("lyrics");
 
-  <script>
-    const lyrics = [
-      const lyrics = [
-  { time: 0.0, text: "♪" },
-  { time: 27.3, text: "Çocuktuk sadece" },
-  { time: 34.0, text: "Hayallerimiz ve kalplerimiz aynı ritimdeydi" },
-  { time: 40.3, text: "♪" },
-  { time: 43.0, text: "Atla gemimize" },
-  { time: 49.0, text: "İstesen de istemesen de gidiyoruz" },
-  { time: 59.1, text: "İstesen de istemesen de..." },
-  { time: 65.0, text: "♪" },
-  { time: 85.0, text: "Denize yelken açtık" },
-  { time: 91.5, text: "Amaçsızca," },
-  { time: 94.0, text: "bir yönümüz ya da takvimimiz olmadan" },
-  { time: 100.0, text: "Varmaya çalıştığımız kıyı" },
-  { time: 107.0, text: "Daha önce görmüştük, " },
-  { time: 109.0, text: "konuşmadan ya da tek kelime paylaşmadan" },
-  { time: 104.5, text: "Gerek yok duyulmasına gerçek düşüncelerinin" },
-  { time: 120.0, text: "♪" },
-  { time: 124.5, text: "Sen, kelimelerle ifade edilemeyecek kadar güzelsin" },
-  { time: 132.0, text: "♪" },
-  { time: 150.0, text: "Gitme altınlarla döşenmiş yollardan" },
-  { time: 159.0, text: "Seni hüsrana uğratacak onlar" },
-  { time: 164.5, text: "Bulduklarını paylaşmazsan eğer, bunun ne eğlencesi var?" },
-  { time: 172.1, text: "İnşa etmesi yıllar sürer, saniyeler içinde yıkılır" },
-  { time: 207.5, text: "♪" }, // düzeltme: 02.87.50 → 03:27.5 = 207.5 saniye
-  { time: 181.0, text: "Kimse beni teselli etmeyecek" },
-  { time: 187.0, text: "Beni tanımayacak ya da içimde ne olup bittiğini bilmeyecek" },
-  { time: 195.15, text: "Terkedilmiş bir boşluk, kalacak eskisi gibi" },
-  { time: 203.0, text: "Bana orada bir zamanlar yalanlar olduğunu hatırlatacak" },
-  { time: 210.05, text: "♪" },
-  { time: 231.0, text: "Bununla yaşarken öğrendim" },
-  { time: 237.0, text: "Hayatım boyunca okuduklarımdan daha fazlasını" },
-  { time: 247.0, text: "Bu satıra gülümsediğini tahmin ediyorum" },
-  { time: 251.0, text: "♪" },
-  { time: 253.5, text: "O hissi özlüyorum" },
-  { time: 260.0, text: "Dokunuş, öpüşün.. zihnimde hayali ağır bir yük gibi" },
-  { time: 268.0, text: "Hatıralarımız ebediyen mühürlendi zamanda" },
-  { time: 276.0, text: "Sırrımız senin olduğu kadar benim de" },
-  { time: 283.3, text: "Tüm mantığı çoktan ardımızda bıraktık" },
-  { time: 290.0, text: "♪" },
-  { time: 293.2, text: "Ve seni, ölünceye dek tutacağım içimde" },
-  { time: 298.0, text: "♪" }
-];
+  const lyrics = [
+    { time: 0.0, text: "♪" },
+    { time: 27.3, text: "Çocuktuk sadece" },
+    { time: 34.0, text: "Hayallerimiz ve kalplerimiz aynı ritimdeydi" },
+    { time: 40.3, text: "♪" },
+    { time: 43.0, text: "Atla gemimize" },
+    { time: 49.0, text: "İstesen de istemesen de gidiyoruz" },
+    { time: 59.1, text: "İstesen de istemesen de..." },
+    { time: 65.0, text: "♪" },
+    { time: 85.0, text: "Denize yelken açtık" },
+    { time: 91.5, text: "Amaçsızca," },
+    { time: 94.0, text: "bir yönümüz ya da takvimimiz olmadan" },
+    { time: 99.3, text: "Varmaya çalıştığımız kıyı" },
+    { time: 107.0, text: "Daha önce görmüştük, " },
+    { time: 109.0, text: "konuşmadan ya da tek kelime paylaşmadan" },
+    { time: 104.3, text: "Gerek yok duyulmasına gerçek düşüncelerinin" },
+    { time: 120.0, text: "♪" },
+    { time: 124.5, text: "Sen, kelimelerle ifade edilemeyecek kadar güzelsin" },
+    { time: 132.0, text: "♪" },
+    { time: 150.0, text: "Gitme altınlarla döşenmiş yollardan" },
+    { time: 159.0, text: "Seni hüsrana uğratacak onlar" },
+    { time: 164.5, text: "Bulduklarını paylaşmazsan eğer, bunun ne eğlencesi var?" },
+    { time: 172.1, text: "İnşa etmesi yıllar sürer, saniyeler içinde yıkılır" },
+    { time: 207.5, text: "♪" },
+    { time: 221.0, text: "Kimse beni teselli etmeyecek" },
+    { time: 227.0, text: "Beni tanımayacak ya da içimde ne olup bittiğini bilmeyecek" },
+    { time: 235.2, text: "Terkedilmiş bir boşluk, kalacak eskisi gibi" },
+    { time: 243.0, text: "Bana orada bir zamanlar yalanlar olduğunu hatırlatacak" },
+    { time: 250.1, text: "♪" },
+    { time: 271.0, text: "Bununla yaşarken öğrendim" },
+    { time: 277.0, text: "Hayatım boyunca okuduklarımdan daha fazlasını" },
+    { time: 287.0, text: "Bu satıra gülümsediğini tahmin ediyorum" },
+    { time: 291.0, text: "♪" },
+    { time: 293.5, text: "O hissi özlüyorum" },
+    { time: 300.0, text: "Dokunuş, öpüşün.. zihnimde hayali ağır bir yük gibi" },
+    { time: 308.0, text: "Hatıralarımız ebediyen mühürlendi zamanda" },
+    { time: 316.0, text: "Sırrımız senin olduğu kadar benim de" },
+    { time: 323.3, text: "Tüm mantığı çoktan ardımızda bıraktık" },
+    { time: 330.0, text: "♪" },
+    { time: 333.2, text: "Ve seni, ölünceye dek tutacağım içimde" },
+    { time: 338.0, text: "♪" }
+  ];
 
-    const audio = document.getElementById('audio');
-    const lyricsContainer = document.getElementById('lyrics');
-    const playButton = document.getElementById('playButton');
-    const pauseButton = document.getElementById('pauseButton');
-    const backButton = document.getElementById('backButton');
-    const forwardButton = document.getElementById('forwardButton');
-    let currentLine = -1;
+  let currentLyricIndex = -1;
 
-    playButton.addEventListener('click', () => {
+  function togglePlayPause() {
+    if (audio.paused) {
       audio.play();
-      playButton.style.display = 'none';
-      pauseButton.style.display = 'inline-block';
-    });
-
-    pauseButton.addEventListener('click', () => {
+      playPauseBtn.textContent = "⏸ Durdur";
+    } else {
       audio.pause();
-      pauseButton.style.display = 'none';
-      playButton.style.display = 'inline-block';
-    });
+      playPauseBtn.textContent = "▶ Dinlemeye Başla";
+    }
+  }
 
-    backButton.addEventListener('click', () => {
-      audio.currentTime = Math.max(0, audio.currentTime - 10);
-    });
+  function seekAudio(seconds) {
+    audio.currentTime += seconds;
+  }
 
-    forwardButton.addEventListener('click', () => {
-      audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
-    });
-
-    audio.addEventListener('timeupdate', () => {
-      const currentTime = audio.currentTime;
-      for (let i = lyrics.length - 1; i >= 0; i--) {
-        if (currentTime >= lyrics[i].time) {
-          if (currentLine !== i) {
-            lyricsContainer.textContent = lyrics[i].text;
-            lyricsContainer.classList.remove('visible');
-            void lyricsContainer.offsetWidth;
-            lyricsContainer.classList.add('visible');
-            currentLine = i;
-          }
-          break;
+  audio.addEventListener("timeupdate", () => {
+    const currentTime = audio.currentTime;
+    for (let i = 0; i < lyrics.length; i++) {
+      const lyric = lyrics[i];
+      const nextLyric = lyrics[i + 1];
+      if (
+        currentTime >= lyric.time &&
+        (!nextLyric || currentTime < nextLyric.time)
+      ) {
+        if (currentLyricIndex !== i) {
+          currentLyricIndex = i;
+          lyricText.textContent = lyric.text;
+          lyricText.style.opacity = 1;
         }
+        break;
       }
-    });
-  </script>
+    }
+  });
+
+  audio.addEventListener("pause", () => {
+    playPauseBtn.textContent = "▶ Dinlemeye Başla";
+  });
+</script>
 
 </body>
 </html>
