@@ -1,22 +1,79 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>İyi Geceler Sevde</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: white;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+    }
+
+    video {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .lyrics {
+      position: absolute;
+      bottom: 15%;
+      width: 100%;
+      text-align: center;
+      font-size: 2em;
+      text-shadow: 0 0 15px #00f, 0 0 20px #00f;
+      transition: opacity 0.5s;
+    }
+  </style>
 </head>
 <body>
-  <video autoplay muted loop id="bg-video">
-    <source src="https://www.videvo.net/videvo_files/converted/2014_10/preview/Ocean_at_Night.mp49780.webm" type="video/webm">
-  </video>
 
-  <div id="lyrics-container"></div>
+  <!-- Arka plan videosu (isteğe bağlı) -->
+  <!-- <video autoplay loop muted>
+    <source src="ocean-night.mp4" type="video/mp4">
+  </video> -->
 
-  <audio id="audio" controls autoplay>
-  <source src="Low Roar - Friends Make Garbage [Icelandic Fishing Boat].mp3" type="audio/mp3">
-  Tarayıcınız ses öğesini desteklemiyor.
-</audio>
+  <!-- Müzik çalar -->
+  <audio id="audio" autoplay>
+    <source src="Friends Make Garbage [Icelandic Fishing Boat].mp3" type="audio/mp3">
+  </audio>
 
-  <script src="script.js"></script>
+  <!-- Lirikler -->
+  <div class="lyrics" id="lyrics"></div>
+
+  <script>
+    const lyrics = [
+      { time: 0.0, text: "♪" },
+      { time: 27.3, text: "Çocuktuk sadece" },
+      { time: 33.0, text: "Hayallerimiz ve kalplerimiz aynı ritimdeydi" },
+      { time: 40.3, text: "♪" }
+    ];
+
+    const audio = document.getElementById('audio');
+    const lyricsContainer = document.getElementById('lyrics');
+
+    let currentLine = -1;
+
+    audio.addEventListener('timeupdate', () => {
+      const currentTime = audio.currentTime;
+
+      for (let i = lyrics.length - 1; i >= 0; i--) {
+        if (currentTime >= lyrics[i].time) {
+          if (currentLine !== i) {
+            lyricsContainer.textContent = lyrics[i].text;
+            currentLine = i;
+          }
+          break;
+        }
+      }
+    });
+  </script>
+
 </body>
 </html>
