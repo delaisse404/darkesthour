@@ -2,9 +2,8 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>İyi Geceler Sevde</title>
+  <title>Friends Make Garbage</title>
   <style>
-    /* Genel sayfa stili */
     body {
       margin: 0;
       padding: 0;
@@ -16,19 +15,9 @@
       position: relative;
     }
 
-    /* Müzik çalar stil */
-    audio {
-      width: 90%;
-      margin: 30px auto 0 auto;
-      display: block;
-      z-index: 2;
-      position: relative;
-    }
-
-    /* Lirikler */
     .lyrics {
       position: absolute;
-      bottom: 35%;
+      bottom: 50%;
       width: 100%;
       text-align: center;
       font-size: 2em;
@@ -39,37 +28,47 @@
       z-index: 2;
     }
 
-    /* Arka plan görseli (isteğe bağlı, video da eklenebilir) */
-    .background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
+    audio {
+      display: none;
     }
 
-    /* Mobil uyum */
+    #playButton {
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 16px 32px;
+      font-size: 1.2em;
+      background-color: #1e90ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 3;
+      box-shadow: 0 0 10px #1e90ff;
+    }
+
     @media (max-width: 600px) {
       .lyrics {
         font-size: 1.4em;
-        bottom: 40%;
+        bottom: 55%;
+      }
+
+      #playButton {
+        font-size: 1em;
+        padding: 14px 24px;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Arka plan video yerine dilersen burada bir görsel kullanabilirsin -->
-  <!-- <img src="ocean-night.jpg" class="background" alt="background"> -->
-
-  <audio id="audio" controls autoplay>
+  <audio id="audio">
     <source src="FriendsMakeGarbage.mp3" type="audio/mp3">
-    Tarayıcınız ses öğesini desteklemiyor.
   </audio>
 
-  <div class="lyrics" id="lyrics">♪.</div>
+  <button id="playButton">▶ Dinlemeye Başla</button>
+  <div class="lyrics" id="lyrics">Sözler burada çıkacak...</div>
 
   <script>
     const lyrics = [
@@ -81,7 +80,13 @@
 
     const audio = document.getElementById('audio');
     const lyricsContainer = document.getElementById('lyrics');
+    const playButton = document.getElementById('playButton');
     let currentLine = -1;
+
+    playButton.addEventListener('click', () => {
+      audio.play();
+      playButton.style.display = 'none';
+    });
 
     audio.addEventListener('timeupdate', () => {
       const currentTime = audio.currentTime;
