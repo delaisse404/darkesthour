@@ -3,75 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <title>Friends Make Garbage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       margin: 0;
       padding: 0;
       background-color: black;
       color: white;
-      font-family: 'Arial', sans-serif;
-      height: 100vh;
+      font-family: Arial, sans-serif;
       overflow: hidden;
       position: relative;
+      height: 100vh;
     }
 
     .lyrics {
       position: absolute;
-      bottom: 52%;
+      top: 25%;
       width: 100%;
       text-align: center;
-      font-size: 2.6em;
+      font-size: 2.5em;
       font-style: italic;
       opacity: 0;
       transition: opacity 1s ease-in-out;
+      z-index: 2;
       padding: 0 10px;
       box-sizing: border-box;
-      z-index: 2;
     }
 
     .lyrics.visible {
       opacity: 1;
     }
 
-    audio {
-      display: none;
-    }
-
     .controls {
       position: absolute;
-      top: 58%;
+      top: 60%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translateX(-50%);
       z-index: 3;
-      display: flex;
-      gap: 15px;
     }
 
     .controls button {
-      padding: 16px 28px;
+      padding: 14px 24px;
       font-size: 1.2em;
-      background-color: #333;
+      background-color: #222;
       color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      box-shadow: 0 0 8px rgba(255,255,255,0.2);
+      box-shadow: 0 0 10px rgba(255,255,255,0.2);
     }
 
     @media (max-width: 600px) {
       .lyrics {
-        font-size: 2em;
-        bottom: 60%;
+        font-size: 1.7em;
+        top: 20%;
       }
 
       .controls {
-        top: 67%;
+        top: 70%;
       }
 
       .controls button {
-        font-size: 1em;
         padding: 12px 20px;
+        font-size: 1em;
       }
+    }
+
+    audio {
+      display: none;
     }
   </style>
 </head>
@@ -79,6 +78,7 @@
 
   <audio id="audio">
     <source src="FriendsMakeGarbage.mp3" type="audio/mp3">
+    Tarayıcınız audio elementini desteklemiyor.
   </audio>
 
   <div class="controls">
@@ -102,7 +102,7 @@
       { time: 92.0, text: "Amaçsızca," },
       { time: 94.5, text: "bir yönümüz ya da takvimimiz olmadan" },
       { time: 100.0, text: "Varmaya çalıştığımız kıyı" },
-      { time: 107.5, text: "Daha önce görmüştük, " },
+      { time: 107.5, text: "Daha önce görmüştük," },
       { time: 109.3, text: "konuşmadan ya da tek kelime paylaşmadan" },
       { time: 115.1, text: "Gerek yok duyulmasına gerçek düşüncelerinin" },
       { time: 125.1, text: "Sen, kelimelerle ifade edilemeyecek kadar güzelsin" }
@@ -128,4 +128,19 @@
 
     audio.addEventListener('timeupdate', () => {
       const currentTime = audio.currentTime;
-      for (let i = lyrics.length -
+      for (let i = lyrics.length - 1; i >= 0; i--) {
+        if (currentTime >= lyrics[i].time) {
+          if (currentLine !== i) {
+            lyricsContainer.textContent = lyrics[i].text;
+            lyricsContainer.classList.remove('visible');
+            void lyricsContainer.offsetWidth;
+            lyricsContainer.classList.add('visible');
+            currentLine = i;
+          }
+          break;
+        }
+      }
+    });
+  </script>
+
+</body>
