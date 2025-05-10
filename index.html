@@ -17,15 +17,20 @@
 
     .lyrics {
       position: absolute;
-      bottom: 50%;
+      bottom: 52%;
       width: 100%;
       text-align: center;
       font-size: 2.6em;
       font-style: italic;
-      transition: opacity 0.5s;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
       padding: 0 10px;
       box-sizing: border-box;
       z-index: 2;
+    }
+
+    .lyrics.visible {
+      opacity: 1;
     }
 
     audio {
@@ -34,7 +39,7 @@
 
     .controls {
       position: absolute;
-      top: 60%;
+      top: 58%;
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 3;
@@ -56,7 +61,11 @@
     @media (max-width: 600px) {
       .lyrics {
         font-size: 2em;
-        bottom: 55%;
+        bottom: 60%;
+      }
+
+      .controls {
+        top: 67%;
       }
 
       .controls button {
@@ -83,8 +92,20 @@
     const lyrics = [
       { time: 0.0, text: "♪" },
       { time: 27.3, text: "Çocuktuk sadece" },
-      { time: 33.0, text: "Hayallerimiz ve kalplerimiz aynı ritimdeydi" },
-      { time: 40.3, text: "♪" }
+      { time: 34.0, text: "Hayallerimiz ve kalplerimiz aynı ritimdeydi" },
+      { time: 40.3, text: "♪" },
+      { time: 43.3, text: "Atla gemimize" },
+      { time: 49.2, text: "İstesen de istemesen de gidiyoruz" },
+      { time: 59.29, text: "İstesen de istemesen de..." },
+      { time: 65.0, text: "♪" },
+      { time: 85.5, text: "Denize yelken açtık" },
+      { time: 92.0, text: "Amaçsızca," },
+      { time: 94.5, text: "bir yönümüz ya da takvimimiz olmadan" },
+      { time: 100.0, text: "Varmaya çalıştığımız kıyı" },
+      { time: 107.5, text: "Daha önce görmüştük, " },
+      { time: 109.3, text: "konuşmadan ya da tek kelime paylaşmadan" },
+      { time: 115.1, text: "Gerek yok duyulmasına gerçek düşüncelerinin" },
+      { time: 125.1, text: "Sen, kelimelerle ifade edilemeyecek kadar güzelsin" }
     ];
 
     const audio = document.getElementById('audio');
@@ -107,17 +128,4 @@
 
     audio.addEventListener('timeupdate', () => {
       const currentTime = audio.currentTime;
-      for (let i = lyrics.length - 1; i >= 0; i--) {
-        if (currentTime >= lyrics[i].time) {
-          if (currentLine !== i) {
-            lyricsContainer.textContent = lyrics[i].text;
-            currentLine = i;
-          }
-          break;
-        }
-      }
-    });
-  </script>
-
-</body>
-</html>
+      for (let i = lyrics.length -
