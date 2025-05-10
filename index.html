@@ -18,13 +18,13 @@
 
     .lyrics {
       position: absolute;
-      top: 25%;
+      top: 20%;
       width: 100%;
       text-align: center;
-      font-size: 2.5em;
+      font-size: 2.3em;
       font-style: italic;
       opacity: 0;
-      transition: opacity 1s ease-in-out;
+      transition: opacity 1.2s ease-in-out;
       z-index: 2;
       padding: 0 10px;
       box-sizing: border-box;
@@ -36,7 +36,7 @@
 
     .controls {
       position: absolute;
-      top: 60%;
+      top: 65%;
       left: 50%;
       transform: translateX(-50%);
       z-index: 3;
@@ -55,12 +55,12 @@
 
     @media (max-width: 600px) {
       .lyrics {
-        font-size: 1.7em;
-        top: 20%;
+        font-size: 1.6em;
+        top: 15%;
       }
 
       .controls {
-        top: 70%;
+        top: 75%;
       }
 
       .controls button {
@@ -94,18 +94,42 @@
       { time: 27.3, text: "Çocuktuk sadece" },
       { time: 34.0, text: "Hayallerimiz ve kalplerimiz aynı ritimdeydi" },
       { time: 40.3, text: "♪" },
-      { time: 43.3, text: "Atla gemimize" },
-      { time: 49.2, text: "İstesen de istemesen de gidiyoruz" },
-      { time: 59.29, text: "İstesen de istemesen de..." },
+      { time: 43.0, text: "Atla gemimize" },
+      { time: 49.0, text: "İstesen de istemesen de gidiyoruz" },
+      { time: 59.1, text: "İstesen de istemesen de..." },
       { time: 65.0, text: "♪" },
-      { time: 85.5, text: "Denize yelken açtık" },
-      { time: 92.0, text: "Amaçsızca," },
-      { time: 94.5, text: "bir yönümüz ya da takvimimiz olmadan" },
-      { time: 100.0, text: "Varmaya çalıştığımız kıyı" },
-      { time: 107.5, text: "Daha önce görmüştük," },
-      { time: 109.3, text: "konuşmadan ya da tek kelime paylaşmadan" },
-      { time: 115.1, text: "Gerek yok duyulmasına gerçek düşüncelerinin" },
-      { time: 125.1, text: "Sen, kelimelerle ifade edilemeyecek kadar güzelsin" }
+      { time: 85.0, text: "Denize yelken açtık" },
+      { time: 91.5, text: "Amaçsızca," },
+      { time: 94.0, text: "bir yönümüz ya da takvimimiz olmadan" },
+      { time: 99.3, text: "Varmaya çalıştığımız kıyı" },
+      { time: 107.0, text: "Daha önce görmüştük, " },
+      { time: 109.0, text: "konuşmadan ya da tek kelime paylaşmadan" },
+      { time: 104.3, text: "Gerek yok duyulmasına gerçek düşüncelerinin" },
+      { time: 120.0, text: "♪" },
+      { time: 124.5, text: "Sen, kelimelerle ifade edilemeyecek kadar güzelsin" },
+      { time: 132.0, text: "♪" },
+      { time: 150.0, text: "Gitme altınlarla döşenmiş yollardan" },
+      { time: 159.0, text: "Seni hüsrana uğratacak onlar" },
+      { time: 164.5, text: "Bulduklarını paylaşmazsan eğer, bunun ne eğlencesi var?" },
+      { time: 172.1, text: "İnşa etmesi yıllar sürer, saniyeler içinde yıkılır" },
+      { time: 187.5, text: "♪" },
+      { time: 181.0, text: "Kimse beni teselli etmeyecek" },
+      { time: 187.0, text: "Beni tanımayacak ya da içimde ne olup bittiğini bilmeyecek" },
+      { time: 195.15, text: "Terkedilmiş bir boşluk, kalacak eskisi gibi" },
+      { time: 203.0, text: "Bana orada bir zamanlar yalanlar olduğunu hatırlatacak" },
+      { time: 210.05, text: "♪" },
+      { time: 231.0, text: "Bununla yaşarken öğrendim" },
+      { time: 237.0, text: "Hayatım boyunca okuduklarımdan daha fazlasını" },
+      { time: 247.0, text: "Bu satıra gülümsediğini tahmin ediyorum" },
+      { time: 251.0, text: "♪" },
+      { time: 253.5, text: "O hissi özlüyorum" },
+      { time: 260.0, text: "Dokunuş, öpüşün.. zihnimde hayali ağır bir yük gibi" },
+      { time: 268.0, text: "Hatıralarımız ebediyen mühürlendi zamanda" },
+      { time: 276.0, text: "Sırrımız senin olduğu kadar benim de" },
+      { time: 283.3, text: "Tüm mantığı çoktan ardımızda bıraktık" },
+      { time: 290.0, text: "♪" },
+      { time: 293.2, text: "Ve seni, ölünceye dek tutacağım içimde" },
+      { time: 298.0, text: "♪" }
     ];
 
     const audio = document.getElementById('audio');
@@ -144,3 +168,4 @@
   </script>
 
 </body>
+</html>
