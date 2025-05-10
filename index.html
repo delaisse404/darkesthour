@@ -20,8 +20,8 @@
       bottom: 50%;
       width: 100%;
       text-align: center;
-      font-size: 2em;
-      text-shadow: 0 0 15px #00f, 0 0 20px #00f;
+      font-size: 2.6em;
+      font-style: italic;
       transition: opacity 0.5s;
       padding: 0 10px;
       box-sizing: border-box;
@@ -32,31 +32,36 @@
       display: none;
     }
 
-    #playButton {
+    .controls {
       position: absolute;
       top: 60%;
       left: 50%;
       transform: translate(-50%, -50%);
-      padding: 16px 32px;
+      z-index: 3;
+      display: flex;
+      gap: 15px;
+    }
+
+    .controls button {
+      padding: 16px 28px;
       font-size: 1.2em;
-      background-color: #1e90ff;
+      background-color: #333;
       color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      z-index: 3;
-      box-shadow: 0 0 10px #1e90ff;
+      box-shadow: 0 0 8px rgba(255,255,255,0.2);
     }
 
     @media (max-width: 600px) {
       .lyrics {
-        font-size: 1.4em;
+        font-size: 2em;
         bottom: 55%;
       }
 
-      #playButton {
+      .controls button {
         font-size: 1em;
-        padding: 14px 24px;
+        padding: 12px 20px;
       }
     }
   </style>
@@ -67,7 +72,11 @@
     <source src="FriendsMakeGarbage.mp3" type="audio/mp3">
   </audio>
 
-  <button id="playButton">▶ Dinlemeye Başla</button>
+  <div class="controls">
+    <button id="playButton">▶ Dinlemeye Başla</button>
+    <button id="pauseButton" style="display: none;">⏸ Durdur</button>
+  </div>
+
   <div class="lyrics" id="lyrics">Sözler burada çıkacak...</div>
 
   <script>
@@ -81,11 +90,19 @@
     const audio = document.getElementById('audio');
     const lyricsContainer = document.getElementById('lyrics');
     const playButton = document.getElementById('playButton');
+    const pauseButton = document.getElementById('pauseButton');
     let currentLine = -1;
 
     playButton.addEventListener('click', () => {
       audio.play();
       playButton.style.display = 'none';
+      pauseButton.style.display = 'inline-block';
+    });
+
+    pauseButton.addEventListener('click', () => {
+      audio.pause();
+      pauseButton.style.display = 'none';
+      playButton.style.display = 'inline-block';
     });
 
     audio.addEventListener('timeupdate', () => {
