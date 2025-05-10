@@ -39,6 +39,9 @@
       top: 65%;
       left: 50%;
       transform: translateX(-50%);
+      display: flex;
+      gap: 15px;
+      align-items: center;
       z-index: 3;
     }
 
@@ -61,6 +64,7 @@
 
       .controls {
         top: 75%;
+        flex-direction: row;
       }
 
       .controls button {
@@ -82,8 +86,10 @@
   </audio>
 
   <div class="controls">
+    <button id="backButton">⏪ 10s</button>
     <button id="playButton">▶ Dinlemeye Başla</button>
     <button id="pauseButton" style="display: none;">⏸ Durdur</button>
+    <button id="forwardButton">10s ⏩</button>
   </div>
 
   <div class="lyrics" id="lyrics">Sözler burada çıkacak...</div>
@@ -102,9 +108,9 @@
       { time: 91.5, text: "Amaçsızca," },
       { time: 94.0, text: "bir yönümüz ya da takvimimiz olmadan" },
       { time: 99.3, text: "Varmaya çalıştığımız kıyı" },
+      { time: 104.3, text: "Gerek yok duyulmasına gerçek düşüncelerinin" },
       { time: 107.0, text: "Daha önce görmüştük, " },
       { time: 109.0, text: "konuşmadan ya da tek kelime paylaşmadan" },
-      { time: 104.3, text: "Gerek yok duyulmasına gerçek düşüncelerinin" },
       { time: 120.0, text: "♪" },
       { time: 124.5, text: "Sen, kelimelerle ifade edilemeyecek kadar güzelsin" },
       { time: 132.0, text: "♪" },
@@ -112,7 +118,6 @@
       { time: 159.0, text: "Seni hüsrana uğratacak onlar" },
       { time: 164.5, text: "Bulduklarını paylaşmazsan eğer, bunun ne eğlencesi var?" },
       { time: 172.1, text: "İnşa etmesi yıllar sürer, saniyeler içinde yıkılır" },
-      { time: 187.5, text: "♪" },
       { time: 181.0, text: "Kimse beni teselli etmeyecek" },
       { time: 187.0, text: "Beni tanımayacak ya da içimde ne olup bittiğini bilmeyecek" },
       { time: 195.15, text: "Terkedilmiş bir boşluk, kalacak eskisi gibi" },
@@ -136,6 +141,8 @@
     const lyricsContainer = document.getElementById('lyrics');
     const playButton = document.getElementById('playButton');
     const pauseButton = document.getElementById('pauseButton');
+    const backButton = document.getElementById('backButton');
+    const forwardButton = document.getElementById('forwardButton');
     let currentLine = -1;
 
     playButton.addEventListener('click', () => {
@@ -148,6 +155,14 @@
       audio.pause();
       pauseButton.style.display = 'none';
       playButton.style.display = 'inline-block';
+    });
+
+    backButton.addEventListener('click', () => {
+      audio.currentTime = Math.max(0, audio.currentTime - 10);
+    });
+
+    forwardButton.addEventListener('click', () => {
+      audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
     });
 
     audio.addEventListener('timeupdate', () => {
