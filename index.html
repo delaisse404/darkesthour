@@ -159,10 +159,14 @@
     }
   }
 
-  playButton.addEventListener('click', () => {
-    audio.play();
-    playButton.style.display = 'none';
-    pauseButton.style.display = 'inline-block';
+playButton.addEventListener('click', () => {
+  if (audio.ended || audio.currentTime === audio.duration) {
+    audio.currentTime = 0; // Baştan başlat
+  }
+  audio.play();
+  playButton.style.display = 'none';
+  pauseButton.style.display = 'inline-block';
+});
   });
 
   pauseButton.addEventListener('click', () => {
