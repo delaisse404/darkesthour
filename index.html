@@ -141,30 +141,28 @@
   const pauseButton = document.getElementById('pauseButton');
   const backButton = document.getElementById('backButton');
   const forwardButton = document.getElementById('forwardButton');
+  let currentLine = -1;
 
   function updateLyrics() {
     const currentTime = audio.currentTime;
-    let activeText = "";
-
     for (let i = 0; i < lyrics.length; i++) {
       if (currentTime >= lyrics[i].time) {
-        activeText = lyrics[i].text;
+        if (currentLine !== i) {
+          lyricsContainer.textContent = lyrics[i].text;
+          lyricsContainer.classList.remove('visible');
+          void lyricsContainer.offsetWidth; // Trigger reflow
+          lyricsContainer.classList.add('visible');
+          currentLine = i;
+        }
       } else {
         break;
       }
-    }
-
-    if (lyricsContainer.textContent !== activeText) {
-      lyricsContainer.textContent = activeText;
-      lyricsContainer.classList.remove('visible');
-      void lyricsContainer.offsetWidth;
-      lyricsContainer.classList.add('visible');
     }
   }
 
   playButton.addEventListener('click', () => {
     if (audio.ended || audio.currentTime === audio.duration) {
-      audio.currentTime = 0;
+      audio.currentTime = 0; // Reset to start
     }
     audio.play();
     playButton.style.display = 'none';
@@ -179,16 +177,16 @@
 
   backButton.addEventListener('click', () => {
     audio.currentTime = Math.max(0, audio.currentTime - 10);
+    updateLyrics(); // Update lyrics after seeking
   });
 
   forwardButton.addEventListener('click', () => {
     audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
-  });
-
-  audio.addEventListener('ended', () => {
-    playButton.style.display = 'inline-block';
-    pauseButton.style.display = 'none';
+    updateLyrics(); // Update lyrics after seeking
   });
 
   audio.addEventListener('timeupdate', updateLyrics);
 </script>
+
+</body>
+</html>
