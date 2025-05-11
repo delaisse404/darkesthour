@@ -2,8 +2,8 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>İyi Geceler Sevde</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       margin: 0;
@@ -12,7 +12,6 @@
       color: white;
       font-family: Arial, sans-serif;
       overflow: hidden;
-      position: relative;
       height: 100vh;
     }
 
@@ -56,108 +55,36 @@
       box-shadow: 0 0 10px rgba(255,255,255,0.2);
     }
 
-    @media (max-width: 600px) {
-      .lyrics {
-        font-size: 1.6em;
-        top: 15%;
-      }
-
-      .controls {
-        top: 75%;
-        flex-direction: row;
-      }
-
-      .controls button {
-        padding: 12px 20px;
-        font-size: 1em;
-      }
-    }
-
-    audio {
-      display: none;
+    video {
+      width: 100%;
+      height: auto;
     }
   </style>
 </head>
 <body>
 
-  <audio id="audio">
-    <source src="https://github.com/delaisse404/darkesthour/raw/refs/heads/main/FriendsMakeGarbage.mp3" type="audio/mp3">
-    Tarayıcınız audio elementini desteklemiyor.
-  </audio>
+  <video id="video" controls>
+    <source src="https://drive.google.com/uc?id=1YrqJUKm8OFQlhLcT9nSH1PQPPCuFGAbf" type="video/mp4">
+    Tarayıcınız video elementini desteklemiyor.
+    <track label="Türkçe Altyazılar" kind="subtitles" srclang="tr" src="subtitles.vtt" default>
+  </video>
 
   <div class="controls">
     <button id="playButton">▶ Dinlemeye Başla</button>
     <button id="pauseButton" style="display: none;">⏸ Durdur</button>
   </div>
 
-  <div class="lyrics" id="lyrics">Sözler burada çıkacak...</div>
-
   <script>
-    const lyrics = [
-      { time: 0.0, text: "♪" },
-      { time: 27.3, text: "Çocuktuk sadece" },
-      { time: 34.0, text: "Hayallerimiz ve kalplerimiz aynı ritimdeydi" },
-      { time: 40.3, text: "♪" },
-      { time: 43.0, text: "Atla gemimize" },
-      { time: 49.0, text: "İstesen de istemesen de gidiyoruz" },
-      { time: 59.1, text: "İstesen de istemesen de..." },
-      { time: 65.0, text: "♪" },
-      { time: 85.0, text: "Denize yelken açtık" },
-      { time: 91.5, text: "Amaçsızca," },
-      { time: 94.0, text: "bir yönümüz ya da takvimimiz olmadan" },
-      { time: 99.30, text: "Varmaya çalıştığımız kıyı" },
-      { time: 107.00, text: "Önceden de görmüştük, konuşmadan ya da tek kelime paylaşmadan" },
-      { time: 115.00, text: "Gerek yok duyulmasına gerçek düşüncelerinin" },
-      { time: 124.50, text: "Sen, kelimelerle ifade edilemeyecek kadar güzelsin" },
-      { time: 132.00, text: "♪" },
-      { time: 150.0, text: "Gitme altınlarla döşenmiş yollardan" },
-      { time: 159.0, text: "Seni hüsrana uğratacak onlar" },
-      { time: 164.5, text: "Bulduklarını paylaşmazsan eğer, bunun ne eğlencesi var?" },
-      { time: 172.1, text: "İnşa etmesi yıllar sürer, saniyeler içinde yıkılır" },
-      { time: 181.0, text: "Kimse beni teselli etmeyecek" },
-      { time: 187.0, text: "Beni tanımayacak ya da içimde ne olup bittiğini bilmeyecek" },
-      { time: 195.15, text: "Terkedilmiş bir boşluk, kalacak eskisi gibi" },
-      { time: 203.0, text: "Bana orada bir zamanlar yalanlar olduğunu hatırlatacak" },
-      { time: 210.05, text: "♪" },
-      { time: 231.0, text: "Bununla yaşarken öğrendim" },
-      { time: 237.0, text: "Hayatım boyunca okuduklarımdan daha fazlasını" },
-      { time: 247.0, text: "Bu satıra gülümsediğini tahmin ediyorum" },
-      { time: 252.0, text: "♪" },
-      { time: 253.5, text: "O hissi özlüyorum" },
-      { time: 260.0, text: "Dokunuş, öpüşün.. hayali zihnimde ağır bir yük gibi" },
-      { time: 268.0, text: "Hatıralarımız ebediyen mühürlendi zamanda" },
-      { time: 276.0, text: "Sırrımız senin olduğu kadar benim de" },
-      { time: 283.3, text: "Tüm mantığı çoktan ardımızda bıraktık" },
-      { time: 290.0, text: "♪" },
-      { time: 293.2, text: "Ve seni, ölünceye dek tutacağım içimde" },
-      { time: 298.0, text: "♪" }
-    ];
-
-    const audio = document.getElementById('audio');
-    const lyricsContainer = document.getElementById('lyrics');
+    const video = document.getElementById('video');
     const playButton = document.getElementById('playButton');
     const pauseButton = document.getElementById('pauseButton');
 
-    let audioContext;
-    let analyserNode;
     let isPlaying = false;
-    let startOffset = 0; // Başlangıç zamanı offset'ini tutan değişken
-    let previousTime = 0; // Önceki zaman değerini tutmak
 
     // Şarkıyı başlatan fonksiyon
     playButton.addEventListener('click', function() {
       if (!isPlaying) {
-        audio.play();
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        analyserNode = audioContext.createAnalyser();
-
-        // Ses kaynağını bağla
-        const source = audioContext.createMediaElementSource(audio);
-        source.connect(analyserNode);
-        analyserNode.connect(audioContext.destination);
-
-        // Başlangıç zamanı offset'ini al
-        startOffset = audioContext.currentTime - audio.currentTime;
+        video.play();
         isPlaying = true;
 
         // Görünürlüğü değiştir
@@ -169,37 +96,12 @@
     // Şarkıyı durduran fonksiyon
     pauseButton.addEventListener('click', function() {
       if (isPlaying) {
-        audio.pause();
+        video.pause();
         isPlaying = false;
         playButton.style.display = 'inline-block';
         pauseButton.style.display = 'none';
       }
     });
-
-    // Liriklerin güncellenmesi için fonksiyon
-    function updateLyrics() {
-      const currentTime = audioContext.currentTime - startOffset;
-      let activeText = "";
-
-      for (let i = 0; i < lyrics.length; i++) {
-        if (currentTime >= lyrics[i].time) {
-          activeText = lyrics[i].text;
-        } else {
-          break;
-        }
-      }
-
-      if (lyricsContainer.textContent !== activeText) {
-        lyricsContainer.textContent = activeText;
-        lyricsContainer.classList.remove('visible');
-        void lyricsContainer.offsetWidth;
-        lyricsContainer.classList.add('visible');
-      }
-    }
-
-    // Zamanlamayı sürekli güncelle
-    setInterval(updateLyrics, 100);
-
   </script>
 
 </body>
