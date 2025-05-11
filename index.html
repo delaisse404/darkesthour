@@ -142,6 +142,8 @@
     const backButton = document.getElementById('backButton');
     const forwardButton = document.getElementById('forwardButton');
 
+    let isSeeking = false; // Flag to control seeking process
+
     function updateLyrics() {
       const currentTime = audio.currentTime;
       let activeText = "";
@@ -177,14 +179,21 @@
       playButton.style.display = 'inline-block';
     });
 
+    function seekAudio(delta) {
+      if (!isSeeking) {
+        isSeeking = true;
+        audio.currentTime = Math.min(Math.max(0, audio.currentTime + delta), audio.duration);
+        updateLyrics(); // Update lyrics after seeking
+        setTimeout(() => isSeeking = false, 300); // Allow seeking again after 300ms
+      }
+    }
+
     backButton.addEventListener('click', () => {
-      audio.currentTime = Math.max(0, audio.currentTime - 10); // Seek back 10 seconds
-      updateLyrics(); // Update lyrics after seeking
+      seekAudio(-10); // Seek back 10 seconds
     });
 
     forwardButton.addEventListener('click', () => {
-      audio.currentTime = Math.min(audio.duration, audio.currentTime + 10); // Seek forward 10 seconds
-      updateLyrics(); // Update lyrics after seeking
+      seekAudio(10); // Seek forward 10 seconds
     });
 
     audio.addEventListener('timeupdate', updateLyrics);
