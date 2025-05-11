@@ -138,6 +138,7 @@
   ];
 
   let currentIndex = -1;
+  let buttonCooldown = false;
 
   function updateLyrics() {
     const time = audio.currentTime;
@@ -147,7 +148,7 @@
           currentIndex = i;
           lyricsContainer.textContent = lyrics[i].text;
           lyricsContainer.classList.remove("visible");
-          void lyricsContainer.offsetWidth; // reflow
+          void lyricsContainer.offsetWidth; // trigger reflow
           lyricsContainer.classList.add("visible");
         }
         break;
@@ -156,25 +157,42 @@
     requestAnimationFrame(updateLyrics);
   }
 
+  function withCooldown(action) {
+    if (buttonCooldown) return;
+    buttonCooldown = true;
+    action();
+    setTimeout(() => {
+      buttonCooldown = false;
+    }, 5000); // 5 saniye
+  }
+
   playButton.onclick = () => {
-    audio.play();
-    playButton.style.display = "none";
-    pauseButton.style.display = "inline-block";
-    requestAnimationFrame(updateLyrics);
+    withCooldown(() => {
+      audio.play();
+      playButton.style.display = "none";
+      pauseButton.style.display = "inline-block";
+      requestAnimationFrame(updateLyrics);
+    });
   };
 
   pauseButton.onclick = () => {
-    audio.pause();
-    playButton.style.display = "inline-block";
-    pauseButton.style.display = "none";
+    withCooldown(() => {
+      audio.pause();
+      playButton.style.display = "inline-block";
+      pauseButton.style.display = "none";
+    });
   };
 
   backButton.onclick = () => {
-    audio.currentTime = Math.max(0, audio.currentTime - 10);
+    withCooldown(() => {
+      audio.currentTime = Math.max(0, audio.currentTime - 10);
+    });
   };
 
   forwardButton.onclick = () => {
-    audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+    withCooldown(() => {
+      audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+    });
   };
 
   audio.onended = () => {
@@ -183,6 +201,3 @@
     currentIndex = -1;
   };
 </script>
-
-</body>
-</html>
