@@ -188,7 +188,7 @@
     }
 
     function seekAudio(delta) {
-      if (isSeeking || !isPlaying) return; // Only allow seeking if playing and not seeking already
+      if (isSeeking) return; // Prevent multiple clicks while seeking
 
       isSeeking = true;
       disableButtons();
@@ -216,7 +216,7 @@
       isPlaying = true;
       playButton.style.display = 'none';
       pauseButton.style.display = 'inline-block';
-      startLyricInterval(); // Start updating lyrics when audio is playing
+      startLyricInterval(); // Start the lyric interval
     });
 
     pauseButton.addEventListener('click', () => {
@@ -224,7 +224,7 @@
       isPlaying = false;
       pauseButton.style.display = 'none';
       playButton.style.display = 'inline-block';
-      stopLyricInterval(); // Stop updating lyrics when paused
+      stopLyricInterval(); // Stop the lyric interval
     });
 
     audio.addEventListener('timeupdate', updateLyrics);
