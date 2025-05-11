@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>İyi Geceler Sevde</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       margin: 0;
@@ -12,7 +12,6 @@
       color: white;
       font-family: Arial, sans-serif;
       overflow: hidden;
-      position: relative;
       height: 100vh;
     }
 
@@ -21,7 +20,7 @@
       top: 20%;
       width: 100%;
       text-align: center;
-      font-size: 2.3em;
+      font-size: 2em;
       font-style: italic;
       opacity: 0;
       transition: opacity 1.2s ease-in-out;
@@ -36,7 +35,7 @@
 
     .controls {
       position: absolute;
-      top: 65%;
+      bottom: 10%;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -58,17 +57,17 @@
 
     @media (max-width: 600px) {
       .lyrics {
-        font-size: 1.6em;
+        font-size: 1.3em;
         top: 15%;
       }
 
       .controls {
-        top: 75%;
+        bottom: 8%;
         flex-direction: row;
       }
 
       .controls button {
-        padding: 12px 20px;
+        padding: 10px 16px;
         font-size: 1em;
       }
     }
@@ -78,16 +77,14 @@
 
   <div class="controls">
     <button id="backButton">⏪ 10s</button>
-    <button id="playButton">▶ Dinlemeye Başla</button>
-    <button id="pauseButton" style="display: none;">⏸ Durdur</button>
+    <button id="playButton">▶ Başlat</button>
+    <button id="pauseButton" style="display:none;">⏸ Duraklat</button>
     <button id="forwardButton">10s ⏩</button>
   </div>
 
   <div class="lyrics" id="lyrics">Sözler burada çıkacak...</div>
 
   <script>
-    const audioUrl = "https://github.com/delaisse404/darkesthour/raw/refs/heads/main/FriendsMakeGarbage.mp3";
-
     const lyrics = [
       { time: 0.0, text: "♪" },
       { time: 27.3, text: "Çocuktuk sadece" },
@@ -128,7 +125,11 @@
       { time: 298.0, text: "♪" }
     ];
 
-    let audioContext, audioBuffer, sourceNode, startTime = 0, offset = 0, playing = false, interval;
+    let audioCtx, source, audioBuffer;
+    let isPlaying = false;
+    let startTime = 0;
+    let offset = 0;
+    let intervalId;
 
     const playButton = document.getElementById("playButton");
     const pauseButton = document.getElementById("pauseButton");
@@ -136,92 +137,82 @@
     const forwardButton = document.getElementById("forwardButton");
     const lyricsDiv = document.getElementById("lyrics");
 
-    async function playAudioFromUserInteraction() {
-      try {
-        if (!audioContext) {
-          audioContext = new (window.AudioContext || window.webkitAudioContext)();
-          await audioContext.resume();
-        }
-
-        if (!audioBuffer) {
-          const response = await fetch(audioUrl);
-          const arrayBuffer = await response.arrayBuffer();
-          audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-        }
-
-        sourceNode = audioContext.createBufferSource();
-        sourceNode.buffer = audioBuffer;
-        sourceNode.connect(audioContext.destination);
-        sourceNode.start(0, offset);
-        startTime = audioContext.currentTime;
-        playing = true;
-
-        playButton.style.display = "none";
-        pauseButton.style.display = "inline-block";
-
-        startLyricsUpdater();
-      } catch (err) {
-        console.error("Audio başlatılamadı:", err);
-        alert("Ses başlatılamadı. Lütfen tekrar deneyin veya farklı bir tarayıcı kullanın.");
-      }
-    }
-
-    function pauseAudio() {
-      if (sourceNode) sourceNode.stop();
-      offset += audioContext.currentTime - startTime;
-      playing = false;
-      stopLyricsUpdater();
-    }
-
-    function seek(seconds) {
-      offset = Math.min(Math.max(0, offset + seconds), audioBuffer.duration);
-      if (playing) {
-        pauseAudio();
-        playAudioFromUserInteraction();
-      }
+    async function loadAudio() {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const response = await fetch("https://github.com/delaisse404/darkesthour/raw/refs/heads/main/FriendsMakeGarbage.mp3");
+      const arrayBuffer = await response.arrayBuffer();
+      audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
     }
 
     function getCurrentTime() {
-      return playing ? offset + (audioContext.currentTime - startTime) : offset;
+      return isPlaying ? (audioCtx.currentTime - startTime + offset) : offset;
     }
 
-    function startLyricsUpdater() {
-      interval = setInterval(() => {
-        const currentTime = getCurrentTime();
-        let activeText = "";
-        for (let i = 0; i < lyrics.length; i++) {
-          if (currentTime >= lyrics[i].time) {
-            activeText = lyrics[i].text;
-          } else {
-            break;
-          }
+    function updateLyrics() {
+      const current = getCurrentTime();
+      let currentLyric = "";
+      for (let i = 0; i < lyrics.length; i++) {
+        if (current >= lyrics[i].time) {
+          currentLyric = lyrics[i].text;
+        } else {
+          break;
         }
-        if (lyricsDiv.textContent !== activeText) {
-          lyricsDiv.textContent = activeText;
-          lyricsDiv.classList.remove("visible");
-          void lyricsDiv.offsetWidth;
-          lyricsDiv.classList.add("visible");
-        }
-      }, 100);
+      }
+      if (lyricsDiv.textContent !== currentLyric) {
+        lyricsDiv.textContent = currentLyric;
+        lyricsDiv.classList.remove("visible");
+        void lyricsDiv.offsetWidth;
+        lyricsDiv.classList.add("visible");
+      }
     }
 
-    function stopLyricsUpdater() {
-      clearInterval(interval);
+    function playAudio() {
+      source = audioCtx.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(audioCtx.destination);
+      startTime = audioCtx.currentTime;
+      source.start(0, offset);
+      isPlaying = true;
+      intervalId = setInterval(updateLyrics, 100);
+      playButton.style.display = "none";
+      pauseButton.style.display = "inline-block";
     }
 
-    playButton.addEventListener("click", () => {
-      if (!playing) playAudioFromUserInteraction();
-    });
-
-    pauseButton.addEventListener("click", () => {
-      pauseAudio();
-      pauseButton.style.display = "none";
+    function pauseAudio() {
+      source.stop();
+      offset += audioCtx.currentTime - startTime;
+      isPlaying = false;
+      clearInterval(intervalId);
       playButton.style.display = "inline-block";
-    });
+      pauseButton.style.display = "none";
+    }
 
-    backButton.addEventListener("click", () => seek(-10));
-    forwardButton.addEventListener("click", () => seek(10));
+    function seek(delta) {
+      if (isPlaying) {
+        pauseAudio();
+        offset = Math.max(0, offset + delta);
+        playAudio();
+      } else {
+        offset = Math.max(0, offset + delta);
+        updateLyrics();
+      }
+    }
+
+    playButton.onclick = async () => {
+      if (!audioBuffer) {
+        await loadAudio();
+      }
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (!isPlaying) {
+        playAudio();
+      }
+    };
+
+    pauseButton.onclick = pauseAudio;
+    backButton.onclick = () => seek(-10);
+    forwardButton.onclick = () => seek(10);
   </script>
-
 </body>
 </html>
