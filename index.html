@@ -72,9 +72,18 @@
         font-size: 1em;
       }
     }
+
+    audio {
+      display: none;
+    }
   </style>
 </head>
 <body>
+
+  <audio id="audio">
+    <source src="FriendsMakeGarbage.mp3" type="audio/mp3">
+    Tarayıcınız audio elementini desteklemiyor.
+  </audio>
 
   <div class="controls">
     <button id="backButton">⏪ 10s</button>
@@ -126,71 +135,19 @@
       { time: 298.0, text: "♪" }
     ];
 
-    let audioContext;
-    let sourceNode;
-    let audioBuffer;
-    let startTime = 0;
-    let offset = 0;
-    let isPlaying = false;
-    let lyricInterval;
-
+    const audio = document.getElementById('audio');
+    const lyricsContainer = document.getElementById('lyrics');
     const playButton = document.getElementById('playButton');
     const pauseButton = document.getElementById('pauseButton');
     const backButton = document.getElementById('backButton');
     const forwardButton = document.getElementById('forwardButton');
-    const lyricsContainer = document.getElementById('lyrics');
 
-    // Load audio file
-    async function loadAudio() {
-      audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const response = await fetch("FriendsMakeGarbage.mp3");
-      const arrayBuffer = await response.arrayBuffer();
-      audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-    }
-
-    function playAudio() {
-      if (!audioBuffer) return;
-
-      sourceNode = audioContext.createBufferSource();
-      sourceNode.buffer = audioBuffer;
-      sourceNode.connect(audioContext.destination);
-      startTime = audioContext.currentTime - offset;
-      sourceNode.start(0, offset);
-      sourceNode.onended = () => stopAudio();
-
-      isPlaying = true;
-      startLyricInterval();
-    }
-
-    function pauseAudio() {
-      if (sourceNode) sourceNode.stop();
-      offset = audioContext.currentTime - startTime;
-      isPlaying = false;
-      stopLyricInterval();
-    }
-
-    function stopAudio() {
-      offset = 0;
-      isPlaying = false;
-      stopLyricInterval();
-      playButton.style.display = 'inline-block';
-      pauseButton.style.display = 'none';
-    }
-
-    function seek(delta) {
-      offset = Math.max(0, offset + delta);
-      if (isPlaying) {
-        pauseAudio();
-        playAudio();
-      }
-    }
-
-    function getCurrentTime() {
-      return isPlaying ? (audioContext.currentTime - startTime) : offset;
-    }
+    let isSeeking = false;
+    let isPlaying = false;
+    let animationFrameId = null;
 
     function updateLyrics() {
-      const currentTime = getCurrentTime();
+      const currentTime = audio.currentTime;
       let activeText = "";
 
       for (let i = 0; i < lyrics.length; i++) {
@@ -207,33 +164,67 @@
         void lyricsContainer.offsetWidth;
         lyricsContainer.classList.add('visible');
       }
-    }
 
-    function startLyricInterval() {
-      lyricInterval = setInterval(updateLyrics, 100);
-    }
-
-    function stopLyricInterval() {
-      clearInterval(lyricInterval);
-    }
-
-    playButton.addEventListener("click", async () => {
-      if (!audioContext) {
-        await loadAudio();
+      // Devam etmesi için döngüyü sürdür
+      if (isPlaying) {
+        animationFrameId = requestAnimationFrame(updateLyrics);
       }
-      playAudio();
-      playButton.style.display = 'none';
-      pauseButton.style.display = 'inline-block';
+    }
+
+    function startLyricsLoop() {
+      cancelAnimationFrame(animationFrameId);
+      isPlaying = true;
+      updateLyrics();
+    }
+
+    function stopLyricsLoop() {
+      isPlaying = false;
+      cancelAnimationFrame(animationFrameId);
+    }
+
+    function disableButtons() {
+      backButton.disabled = true;
+      forwardButton.disabled = true;
+    }
+
+    function enableButtons() {
+      backButton.disabled = false;
+      forwardButton.disabled = false;
+    }
+
+    function seekAudio(delta) {
+      if (isSeeking) return;
+      isSeeking = true;
+      disableButtons();
+      audio.currentTime = Math.min(Math.max(0, audio.currentTime + delta), audio.duration);
+      updateLyrics();
+      setTimeout(() => {
+        isSeeking = false;
+        enableButtons();
+      }, 500);
+    }
+
+    backButton.addEventListener('click', () => seekAudio(-10));
+    forwardButton.addEventListener('click', () => seekAudio(10));
+
+    playButton.addEventListener('click', () => {
+      if (audio.ended || audio.currentTime === audio.duration) {
+        audio.currentTime = 0;
+      }
+      audio.play().then(() => {
+        playButton.style.display = 'none';
+        pauseButton.style.display = 'inline-block';
+        startLyricsLoop();
+      });
     });
 
-    pauseButton.addEventListener("click", () => {
-      pauseAudio();
-      playButton.style.display = 'inline-block';
+    pauseButton.addEventListener('click', () => {
+      audio.pause();
       pauseButton.style.display = 'none';
+      playButton.style.display = 'inline-block';
+      stopLyricsLoop();
     });
 
-    backButton.addEventListener("click", () => seek(-10));
-    forwardButton.addEventListener("click", () => seek(10));
   </script>
 
 </body>
