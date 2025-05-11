@@ -145,13 +145,18 @@
     let isSeeking = false;
     let isPlaying = false;
     let lyricInterval;
-    let canClick = true; // Yeni değişken
+    let lastKnownTime = 0;
 
     // Function to update the lyrics
     function updateLyrics() {
       const currentTime = audio.currentTime;
-      let activeText = "";
+      if (Math.abs(currentTime - lastKnownTime) > 1) { // Check if the time has jumped significantly
+        audio.currentTime = lastKnownTime; // Correct the time jump
+        return;
+      }
+      lastKnownTime = currentTime;
 
+      let activeText = "";
       for (let i = 0; i < lyrics.length; i++) {
         if (currentTime >= lyrics[i].time) {
           activeText = lyrics[i].text;
@@ -178,14 +183,8 @@
 
     // Disable buttons during seeking
     function seekAudio(delta) {
-      if (!canClick) return; // Check if we can click
-      canClick = false; // Disable clicking for a while
       audio.currentTime = Math.min(Math.max(0, audio.currentTime + delta), audio.duration);
       updateLyrics(); // Update lyrics after seeking
-
-      setTimeout(() => {
-        canClick = true; // Re-enable clicking after 2 seconds
-      }, 5000); // 2 saniye sonra buton tekrar aktif olacak
     }
 
     backButton.addEventListener('click', () => {
