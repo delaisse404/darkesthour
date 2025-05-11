@@ -184,15 +184,17 @@
       clearInterval(lyricInterval);
     }
 
-    playButton.addEventListener('click', () => {
-      if (audio.ended || audio.currentTime === audio.duration) {
-        audio.currentTime = 0; // Reset to start
-      }
-      audio.play();
-      isPlaying = true;
-      playButton.style.display = 'none';
-      pauseButton.style.display = 'inline-block';
-      startLyricInterval(); // Start the lyric interval
+   playButton.addEventListener('click', () => {
+  if (audio.ended || audio.currentTime >= audio.duration - 0.1) {
+    audio.currentTime = 0; // Baştan başlat
+    lyricsContainer.textContent = ""; // Sözleri temizle
+  }
+  audio.play();
+  isPlaying = true;
+  playButton.style.display = 'none';
+  pauseButton.style.display = 'inline-block';
+  startLyricInterval();
+});
     });
 
     pauseButton.addEventListener('click', () => {
