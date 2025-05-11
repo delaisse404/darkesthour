@@ -145,6 +145,7 @@
     let isSeeking = false;
     let isPlaying = false;
     let lyricInterval;
+    let canClick = true; // Yeni değişken
 
     // Function to update the lyrics
     function updateLyrics() {
@@ -162,43 +163,39 @@
       if (lyricsContainer.textContent !== activeText) {
         lyricsContainer.textContent = activeText;
         lyricsContainer.classList.remove('visible');
-        void lyricsContainer.offsetWidth; // Trigger reflow to restart animation
+        void lyricsContainer.offsetWidth;
         lyricsContainer.classList.add('visible');
       }
     }
 
     function startLyricInterval() {
-      lyricInterval = setInterval(updateLyrics, 100);
+      lyricInterval = setInterval(updateLyrics, 100); // Update lyrics every 100ms
     }
 
     function stopLyricInterval() {
       clearInterval(lyricInterval);
     }
 
-    function disableButtons() {
-      backButton.disabled = true;
-      forwardButton.disabled = true;
-    }
-
-    function enableButtons() {
-      backButton.disabled = false;
-      forwardButton.disabled = false;
-    }
-
+    // Disable buttons during seeking
     function seekAudio(delta) {
-      if (isSeeking) return;
-
-      isSeeking = true;
-      disableButtons();
+      if (!canClick) return; // Check if we can click
+      canClick = false; // Disable clicking for a while
       audio.currentTime = Math.min(Math.max(0, audio.currentTime + delta), audio.duration);
-      updateLyrics();
+      updateLyrics(); // Update lyrics after seeking
+
       setTimeout(() => {
-        isSeeking = false;
-        enableButtons();
-      }, 500);
+        canClick = true; // Re-enable clicking after 2 seconds
+      }, 6000); // 2 saniye sonra buton tekrar aktif olacak
     }
 
-    // Play/Pause Button Events
+    backButton.addEventListener('click', () => {
+      seekAudio(-10); // Seek back 10 seconds
+    });
+
+    forwardButton.addEventListener('click', () => {
+      seekAudio(10); // Seek forward 10 seconds
+    });
+
     playButton.addEventListener('click', () => {
       if (audio.ended || audio.currentTime === audio.duration) {
         audio.currentTime = 0; // Reset to start
@@ -207,7 +204,7 @@
       isPlaying = true;
       playButton.style.display = 'none';
       pauseButton.style.display = 'inline-block';
-      startLyricInterval();
+      startLyricInterval(); // Start the lyric interval
     });
 
     pauseButton.addEventListener('click', () => {
@@ -215,19 +212,9 @@
       isPlaying = false;
       pauseButton.style.display = 'none';
       playButton.style.display = 'inline-block';
-      stopLyricInterval();
+      stopLyricInterval(); // Stop the lyric interval
     });
 
-    // Event listener for visibility change to handle background music
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        audio.pause(); // Pause when the page goes into the background
-      } else if (isPlaying) {
-        audio.play(); // Resume when the page comes back to the foreground
-      }
-    });
-
-    // Initialize the page
     audio.addEventListener('timeupdate', updateLyrics);
   </script>
 
