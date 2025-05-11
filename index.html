@@ -145,7 +145,9 @@
     let isSeeking = false;
     let isPlaying = false;
     let lyricInterval;
+    let canClick = true; // Yeni değişken
 
+    // Function to update the lyrics
     function updateLyrics() {
       const currentTime = audio.currentTime;
       let activeText = "";
@@ -167,52 +169,42 @@
     }
 
     function startLyricInterval() {
-      lyricInterval = setInterval(updateLyrics, 100);
+      lyricInterval = setInterval(updateLyrics, 100); // Update lyrics every 100ms
     }
 
     function stopLyricInterval() {
       clearInterval(lyricInterval);
     }
 
-    function disableButtons() {
-      backButton.disabled = true;
-      forwardButton.disabled = true;
-    }
-
-    function enableButtons() {
-      backButton.disabled = false;
-      forwardButton.disabled = false;
-    }
-
+    // Disable buttons during seeking
     function seekAudio(delta) {
-      if (isSeeking) return;
-      isSeeking = true;
-      disableButtons();
+      if (!canClick) return; // Check if we can click
+      canClick = false; // Disable clicking for a while
       audio.currentTime = Math.min(Math.max(0, audio.currentTime + delta), audio.duration);
-      updateLyrics();
+      updateLyrics(); // Update lyrics after seeking
+
       setTimeout(() => {
-        isSeeking = false;
-        enableButtons();
-      }, 2000); // 2 saniye engel koyduk
+        canClick = true; // Re-enable clicking after 2 seconds
+      }, 2000); // 2 saniye bekle
     }
 
     backButton.addEventListener('click', () => {
-      seekAudio(-10);
+      seekAudio(-10); // Seek back 10 seconds
     });
 
     forwardButton.addEventListener('click', () => {
-      seekAudio(10);
+      seekAudio(10); // Seek forward 10 seconds
     });
 
     playButton.addEventListener('click', () => {
       if (audio.ended || audio.currentTime === audio.duration) {
-        audio.currentTime = 0;
+        audio.currentTime = 0; // Reset to start
       }
       audio.play();
       isPlaying = true;
       playButton.style.display = 'none';
       pauseButton.style.display = 'inline-block';
-      startLyricInterval();
+      startLyricInterval(); // Start the lyric interval
     });
 
     pauseButton.addEventListener('click', () => {
@@ -220,10 +212,11 @@
       isPlaying = false;
       pauseButton.style.display = 'none';
       playButton.style.display = 'inline-block';
-      stopLyricInterval();
+      stopLyricInterval(); // Stop the lyric interval
     });
 
     audio.addEventListener('timeupdate', updateLyrics);
+
   </script>
 
 </body>
