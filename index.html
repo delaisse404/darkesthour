@@ -14,14 +14,15 @@
       overflow: hidden;
       position: relative;
       height: 100vh;
-      background-image: url('https://github.com/delaisse404/darkesthour/raw/main/cg0yp1p27sg71.jpg'); /* Burada arka plan resmi kullanılacak */
-      background-size: cover;
-      background-position: center;
+      background-image: url('https://github.com/delaisse404/darkesthour/raw/main/cg0yp1p27sg71.jpg'); /* Arka plan fotoğrafı URL */
+      background-size: cover; /* Fotoğrafın boyutunu sayfaya uyacak şekilde ayarlar */
+      background-position: center; /* Fotoğrafın merkezden hizalanmasını sağlar */
+      background-attachment: fixed; /* Arka planın sabitlenmesini sağlar */
     }
 
     .lyrics {
       position: absolute;
-      top: 20%;
+      top: 30%; /* Lirikleri biraz daha aşağıya aldım */
       width: 100%;
       text-align: center;
       font-size: 2.3em;
@@ -89,8 +90,8 @@
   </audio>
 
   <div class="controls">
-    <button id="playButton">▶</button>
-    <button id="pauseButton" style="display: none;">⏸</button>
+    <button id="playButton">▶ Dinlemeye Başla</button>
+    <button id="pauseButton" style="display: none;">⏸ Durdur</button>
   </div>
 
   <div class="lyrics" id="lyrics">Sözler burada çıkacak...</div>
@@ -127,9 +128,9 @@
       { time: 247.0, text: "Bu satıra gülümsediğini tahmin ediyorum" },
       { time: 252.0, text: "♪" },
       { time: 253.5, text: "O hissi özlüyorum" },
-      { time: 260.0, text: "Dokunuşun, öpüşün.. hayali zihnimde ağır bir yük gibi" },
-      { time: 268.0, text: "Hatıralarımız, ebediyen mühürlendi zamanda" },
-      { time: 276.0, text: "Sırrımız, senin olduğu kadar benim de" },
+      { time: 260.0, text: "Dokunuş, öpüşün.. hayali zihnimde ağır bir yük gibi" },
+      { time: 268.0, text: "Hatıralarımız ebediyen mühürlendi zamanda" },
+      { time: 276.0, text: "Sırrımız senin olduğu kadar benim de" },
       { time: 283.3, text: "Tüm mantığı çoktan ardımızda bıraktık" },
       { time: 290.0, text: "♪" },
       { time: 293.2, text: "Ve seni, ölünceye dek tutacağım içimde" },
