@@ -155,7 +155,6 @@
     let isPlaying = false;
     let lyricInterval;
 
-    // Function to update the lyrics
     function updateLyrics() {
       const currentTime = audio.currentTime;
       let activeText = "";
@@ -177,24 +176,23 @@
     }
 
     function startLyricInterval() {
-      lyricInterval = setInterval(updateLyrics, 100); // Update lyrics every 100ms
+      lyricInterval = setInterval(updateLyrics, 100);
     }
 
     function stopLyricInterval() {
       clearInterval(lyricInterval);
     }
 
-   playButton.addEventListener('click', () => {
-  if (audio.ended || audio.currentTime >= audio.duration - 0.1) {
-    audio.currentTime = 0; // Baştan başlat
-    lyricsContainer.textContent = ""; // Sözleri temizle
-  }
-  audio.play();
-  isPlaying = true;
-  playButton.style.display = 'none';
-  pauseButton.style.display = 'inline-block';
-  startLyricInterval();
-});
+    playButton.addEventListener('click', () => {
+      if (audio.ended || audio.currentTime >= audio.duration - 0.1) {
+        audio.currentTime = 0;
+        lyricsContainer.textContent = "";
+      }
+      audio.play();
+      isPlaying = true;
+      playButton.style.display = 'none';
+      pauseButton.style.display = 'inline-block';
+      startLyricInterval();
     });
 
     pauseButton.addEventListener('click', () => {
@@ -202,7 +200,7 @@
       isPlaying = false;
       pauseButton.style.display = 'none';
       playButton.style.display = 'inline-block';
-      stopLyricInterval(); // Stop the lyric interval
+      stopLyricInterval();
     });
 
     audio.addEventListener('timeupdate', updateLyrics);
