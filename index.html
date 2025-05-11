@@ -141,28 +141,30 @@
   const pauseButton = document.getElementById('pauseButton');
   const backButton = document.getElementById('backButton');
   const forwardButton = document.getElementById('forwardButton');
-  let currentLine = -1;
 
   function updateLyrics() {
     const currentTime = audio.currentTime;
-    for (let i = lyrics.length - 1; i >= 0; i--) {
+    let activeText = "";
+
+    for (let i = 0; i < lyrics.length; i++) {
       if (currentTime >= lyrics[i].time) {
-        if (currentLine !== i) {
-          lyricsContainer.textContent = lyrics[i].text;
-          lyricsContainer.classList.remove('visible');
-          void lyricsContainer.offsetWidth;
-          lyricsContainer.classList.add('visible');
-          currentLine = i;
-        }
+        activeText = lyrics[i].text;
+      } else {
         break;
       }
+    }
+
+    if (lyricsContainer.textContent !== activeText) {
+      lyricsContainer.textContent = activeText;
+      lyricsContainer.classList.remove('visible');
+      void lyricsContainer.offsetWidth;
+      lyricsContainer.classList.add('visible');
     }
   }
 
   playButton.addEventListener('click', () => {
     if (audio.ended || audio.currentTime === audio.duration) {
       audio.currentTime = 0;
-      currentLine = -1;
     }
     audio.play();
     playButton.style.display = 'none';
@@ -177,14 +179,10 @@
 
   backButton.addEventListener('click', () => {
     audio.currentTime = Math.max(0, audio.currentTime - 10);
-    currentLine = -1; // senkron düzeltme
-    updateLyrics();
   });
 
   forwardButton.addEventListener('click', () => {
     audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
-    currentLine = -1; // senkron düzeltme
-    updateLyrics();
   });
 
   audio.addEventListener('ended', () => {
