@@ -142,7 +142,7 @@
     const backButton = document.getElementById('backButton');
     const forwardButton = document.getElementById('forwardButton');
 
-    let isSeeking = false; // Flag to control seeking process
+    let isSeeking = false; // Flag to prevent multiple clicks
 
     function updateLyrics() {
       const currentTime = audio.currentTime;
@@ -164,6 +164,42 @@
       }
     }
 
+    function disableButtons() {
+      backButton.disabled = true;
+      forwardButton.disabled = true;
+    }
+
+    function enableButtons() {
+      backButton.disabled = false;
+      forwardButton.disabled = false;
+    }
+
+    function seekAudio(delta) {
+      if (isSeeking) return; // Eğer zaten işlem yapılıyorsa, yeni işlem yapılmasın
+      isSeeking = true; // İşlem başladı
+      disableButtons(); // Butonları devre dışı bırak
+
+      // Sesin zamanını güncelle
+      audio.currentTime = Math.min(Math.max(0, audio.currentTime + delta), audio.duration);
+      
+      // Sözleri güncelle
+      updateLyrics();
+
+      // 500ms sonra butonları tekrar etkinleştir
+      setTimeout(() => {
+        isSeeking = false; // İşlem bitmiştir
+        enableButtons(); // Butonları tekrar etkinleştir
+      }, 500); // 500ms bekle
+    }
+
+    backButton.addEventListener('click', () => {
+      seekAudio(-10); // Seek back 10 seconds
+    });
+
+    forwardButton.addEventListener('click', () => {
+      seekAudio(10); // Seek forward 10 seconds
+    });
+
     playButton.addEventListener('click', () => {
       if (audio.ended || audio.currentTime === audio.duration) {
         audio.currentTime = 0; // Reset to start
@@ -177,23 +213,6 @@
       audio.pause();
       pauseButton.style.display = 'none';
       playButton.style.display = 'inline-block';
-    });
-
-    function seekAudio(delta) {
-      if (!isSeeking) {
-        isSeeking = true;
-        audio.currentTime = Math.min(Math.max(0, audio.currentTime + delta), audio.duration);
-        updateLyrics(); // Update lyrics after seeking
-        setTimeout(() => isSeeking = false, 300); // Allow seeking again after 300ms
-      }
-    }
-
-    backButton.addEventListener('click', () => {
-      seekAudio(-10); // Seek back 10 seconds
-    });
-
-    forwardButton.addEventListener('click', () => {
-      seekAudio(10); // Seek forward 10 seconds
     });
 
     audio.addEventListener('timeupdate', updateLyrics);
