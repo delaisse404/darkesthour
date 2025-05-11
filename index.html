@@ -5,86 +5,10 @@
   <title>İyi Geceler Sevde</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: black;
-      color: white;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-      position: relative;
-      height: 100vh;
-    }
-
-    .lyrics {
-      position: absolute;
-      top: 20%;
-      width: 100%;
-      text-align: center;
-      font-size: 2.3em;
-      font-style: italic;
-      opacity: 0;
-      transition: opacity 1.2s ease-in-out;
-      z-index: 2;
-      padding: 0 10px;
-      box-sizing: border-box;
-    }
-
-    .lyrics.visible {
-      opacity: 1;
-    }
-
-    .controls {
-      position: absolute;
-      top: 65%;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 15px;
-      align-items: center;
-      z-index: 3;
-    }
-
-    .controls button {
-      padding: 14px 24px;
-      font-size: 1.2em;
-      background-color: #222;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 0 10px rgba(255,255,255,0.2);
-    }
-
-    @media (max-width: 600px) {
-      .lyrics {
-        font-size: 1.6em;
-        top: 15%;
-      }
-
-      .controls {
-        top: 75%;
-        flex-direction: row;
-      }
-
-      .controls button {
-        padding: 12px 20px;
-        font-size: 1em;
-      }
-    }
-
-    audio {
-      display: none;
-    }
+    /* ... (senin stil kısmın aynen burada yer alacak) ... */
   </style>
 </head>
 <body>
-
-  <audio id="audio">
-    <source src="FriendsMakeGarbage.mp3" type="audio/mp3">
-    Tarayıcınız audio elementini desteklemiyor.
-  </audio>
-
   <div class="controls">
     <button id="backButton">⏪ 10s</button>
     <button id="playButton">▶ Dinlemeye Başla</button>
@@ -135,96 +59,88 @@
       { time: 298.0, text: "♪" }
     ];
 
-    const audio = document.getElementById('audio');
-  const lyricsContainer = document.getElementById('lyrics');
-  const playButton = document.getElementById('playButton');
-  const pauseButton = document.getElementById('pauseButton');
-  const backButton = document.getElementById('backButton');
-  const forwardButton = document.getElementById('forwardButton');
+    let audioContext, audioBuffer, sourceNode, startTime, offset = 0;
+    let isPlaying = false;
+    let intervalId;
+    const lyricsContainer = document.getElementById('lyrics');
 
-  let lyricTimeout;
-  let currentLineIndex = 0;
-  let canClick = true;
-
-  function showLyric(text) {
-    lyricsContainer.textContent = text;
-    lyricsContainer.classList.remove('visible');
-    void lyricsContainer.offsetWidth;
-    lyricsContainer.classList.add('visible');
-  }
-
-  function scheduleNextLyric() {
-    if (currentLineIndex >= lyrics.length) return;
-
-    const currentTime = audio.currentTime;
-    const lyric = lyrics[currentLineIndex];
-    const delay = Math.max(0, (lyric.time - currentTime) * 1000);
-
-    lyricTimeout = setTimeout(() => {
-      showLyric(lyric.text);
-      currentLineIndex++;
-      scheduleNextLyric();
-    }, delay);
-  }
-
-  function startLyrics() {
-    clearTimeout(lyricTimeout);
-    // Doğru satırı bul
-    currentLineIndex = lyrics.findIndex(l => l.time > audio.currentTime);
-    if (currentLineIndex === -1) {
-      currentLineIndex = lyrics.length;
-    } else if (currentLineIndex > 0) {
-      showLyric(lyrics[currentLineIndex - 1].text);
-    } else {
-      showLyric("");
+    async function loadAudio() {
+      const response = await fetch("FriendsMakeGarbage.mp3");
+      const arrayBuffer = await response.arrayBuffer();
+      audioContext = new AudioContext();
+      audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
     }
-    scheduleNextLyric();
-  }
 
-  function stopLyrics() {
-    clearTimeout(lyricTimeout);
-  }
-
-  function seekAudio(delta) {
-    if (!canClick) return;
-    canClick = false;
-    audio.currentTime = Math.min(Math.max(0, audio.currentTime + delta), audio.duration);
-    startLyrics(); // Seek sonrası lirikleri güncelle
-    setTimeout(() => {
-      canClick = true;
-    }, 2000);
-  }
-
-  playButton.addEventListener('click', () => {
-    if (audio.ended || audio.currentTime === audio.duration) {
-      audio.currentTime = 0;
+    function playAudio() {
+      sourceNode = audioContext.createBufferSource();
+      sourceNode.buffer = audioBuffer;
+      sourceNode.connect(audioContext.destination);
+      startTime = audioContext.currentTime;
+      sourceNode.start(0, offset);
+      isPlaying = true;
+      startLyrics();
     }
-    audio.play();
-    playButton.style.display = 'none';
-    pauseButton.style.display = 'inline-block';
-    startLyrics();
-  });
 
-  pauseButton.addEventListener('click', () => {
-    audio.pause();
-    pauseButton.style.display = 'none';
-    playButton.style.display = 'inline-block';
-    stopLyrics();
-  });
+    function pauseAudio() {
+      if (sourceNode) {
+        sourceNode.stop();
+        offset += audioContext.currentTime - startTime;
+      }
+      isPlaying = false;
+      stopLyrics();
+    }
 
-  backButton.addEventListener('click', () => {
-    seekAudio(-10);
-  });
+    function seek(seconds) {
+      if (isPlaying) pauseAudio();
+      offset = Math.max(0, offset + seconds);
+      playAudio();
+    }
 
-  forwardButton.addEventListener('click', () => {
-    seekAudio(10);
-  });
+    function getCurrentTime() {
+      return isPlaying ? offset + (audioContext.currentTime - startTime) : offset;
+    }
 
-  audio.addEventListener('seeked', () => {
-    startLyrics();
-  });
+    function updateLyrics() {
+      const currentTime = getCurrentTime();
+      let activeText = "";
+      for (let i = 0; i < lyrics.length; i++) {
+        if (currentTime >= lyrics[i].time) {
+          activeText = lyrics[i].text;
+        } else {
+          break;
+        }
+      }
+      if (lyricsContainer.textContent !== activeText) {
+        lyricsContainer.textContent = activeText;
+        lyricsContainer.classList.remove('visible');
+        void lyricsContainer.offsetWidth;
+        lyricsContainer.classList.add('visible');
+      }
+    }
 
-  audio.addEventListener('ended', () => {
-    stopLyrics();
-  });
-</script>
+    function startLyrics() {
+      intervalId = setInterval(updateLyrics, 100);
+    }
+
+    function stopLyrics() {
+      clearInterval(intervalId);
+    }
+
+    document.getElementById('playButton').addEventListener('click', async () => {
+      if (!audioBuffer) await loadAudio();
+      playAudio();
+      document.getElementById('playButton').style.display = 'none';
+      document.getElementById('pauseButton').style.display = 'inline-block';
+    });
+
+    document.getElementById('pauseButton').addEventListener('click', () => {
+      pauseAudio();
+      document.getElementById('pauseButton').style.display = 'none';
+      document.getElementById('playButton').style.display = 'inline-block';
+    });
+
+    document.getElementById('backButton').addEventListener('click', () => seek(-10));
+    document.getElementById('forwardButton').addEventListener('click', () => seek(10));
+  </script>
+</body>
+</html>
