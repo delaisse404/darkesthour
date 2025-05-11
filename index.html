@@ -14,7 +14,7 @@
       overflow: hidden;
       position: relative;
       height: 100vh;
-      background-image: url('https://github.com/delaisse404/darkesthour/raw/main/cg0yp1p27sg71.jpg'); /* Arka plan fotoğrafı URL */
+      background-image: url('https://github.com/delaisse404/darkesthour/raw/main/background.jpg'); /* Arka plan fotoğrafı URL */
       background-size: cover; /* Fotoğrafın boyutunu sayfaya uyacak şekilde ayarlar */
       background-position: center; /* Fotoğrafın merkezden hizalanmasını sağlar */
       background-attachment: fixed; /* Arka planın sabitlenmesini sağlar */
@@ -32,10 +32,24 @@
       z-index: 2;
       padding: 0 10px;
       box-sizing: border-box;
+      background-color: rgba(0, 0, 0, 0.7); /* Liriklerin arkasına yarı şeffaf siyah arka plan */
+      border: 3px solid white; /* Liriklerin etrafına kalın beyaz çerçeve */
+      border-radius: 10px; /* Çerçeve köşelerini yuvarlak yapma */
     }
 
     .lyrics.visible {
       opacity: 1;
+      animation: fadeOut 2s ease-out forwards; /* Yazıların fade-out animasyonu */
+    }
+
+    /* Fade-out efekti */
+    @keyframes fadeOut {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
     }
 
     .controls {
