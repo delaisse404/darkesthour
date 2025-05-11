@@ -144,7 +144,7 @@
 
     let isSeeking = false;
     let isPlaying = false;
-    let animationFrameId = null;
+    let lyricInterval;
 
     function updateLyrics() {
       const currentTime = audio.currentTime;
@@ -164,22 +164,14 @@
         void lyricsContainer.offsetWidth;
         lyricsContainer.classList.add('visible');
       }
-
-      // Devam etmesi için döngüyü sürdür
-      if (isPlaying) {
-        animationFrameId = requestAnimationFrame(updateLyrics);
-      }
     }
 
-    function startLyricsLoop() {
-      cancelAnimationFrame(animationFrameId);
-      isPlaying = true;
-      updateLyrics();
+    function startLyricInterval() {
+      lyricInterval = setInterval(updateLyrics, 100);
     }
 
-    function stopLyricsLoop() {
-      isPlaying = false;
-      cancelAnimationFrame(animationFrameId);
+    function stopLyricInterval() {
+      clearInterval(lyricInterval);
     }
 
     function disableButtons() {
@@ -201,30 +193,37 @@
       setTimeout(() => {
         isSeeking = false;
         enableButtons();
-      }, 500);
+      }, 2000); // 2 saniye engel koyduk
     }
 
-    backButton.addEventListener('click', () => seekAudio(-10));
-    forwardButton.addEventListener('click', () => seekAudio(10));
+    backButton.addEventListener('click', () => {
+      seekAudio(-10);
+    });
+
+    forwardButton.addEventListener('click', () => {
+      seekAudio(10);
+    });
 
     playButton.addEventListener('click', () => {
       if (audio.ended || audio.currentTime === audio.duration) {
         audio.currentTime = 0;
       }
-      audio.play().then(() => {
-        playButton.style.display = 'none';
-        pauseButton.style.display = 'inline-block';
-        startLyricsLoop();
-      });
+      audio.play();
+      isPlaying = true;
+      playButton.style.display = 'none';
+      pauseButton.style.display = 'inline-block';
+      startLyricInterval();
     });
 
     pauseButton.addEventListener('click', () => {
       audio.pause();
+      isPlaying = false;
       pauseButton.style.display = 'none';
       playButton.style.display = 'inline-block';
-      stopLyricsLoop();
+      stopLyricInterval();
     });
 
+    audio.addEventListener('timeupdate', updateLyrics);
   </script>
 
 </body>
