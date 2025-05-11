@@ -136,93 +136,95 @@
     ];
 
     const audio = document.getElementById('audio');
-    const lyricsContainer = document.getElementById('lyrics');
-    const playButton = document.getElementById('playButton');
-    const pauseButton = document.getElementById('pauseButton');
-    const backButton = document.getElementById('backButton');
-    const forwardButton = document.getElementById('forwardButton');
+  const lyricsContainer = document.getElementById('lyrics');
+  const playButton = document.getElementById('playButton');
+  const pauseButton = document.getElementById('pauseButton');
+  const backButton = document.getElementById('backButton');
+  const forwardButton = document.getElementById('forwardButton');
 
-    let isPlaying = false;
-    let rafId;
-    let canClick = true;
+  let lyricTimeout;
+  let currentLineIndex = 0;
+  let canClick = true;
 
-    function updateLyrics() {
-      const currentTime = audio.currentTime;
-      let activeText = "";
+  function showLyric(text) {
+    lyricsContainer.textContent = text;
+    lyricsContainer.classList.remove('visible');
+    void lyricsContainer.offsetWidth;
+    lyricsContainer.classList.add('visible');
+  }
 
-      for (let i = 0; i < lyrics.length; i++) {
-        if (currentTime >= lyrics[i].time) {
-          activeText = lyrics[i].text;
-        } else {
-          break;
-        }
-      }
+  function scheduleNextLyric() {
+    if (currentLineIndex >= lyrics.length) return;
 
-      if (lyricsContainer.textContent !== activeText) {
-        lyricsContainer.textContent = activeText;
-        lyricsContainer.classList.remove('visible');
-        void lyricsContainer.offsetWidth;
-        lyricsContainer.classList.add('visible');
-      }
+    const currentTime = audio.currentTime;
+    const lyric = lyrics[currentLineIndex];
+    const delay = Math.max(0, (lyric.time - currentTime) * 1000);
+
+    lyricTimeout = setTimeout(() => {
+      showLyric(lyric.text);
+      currentLineIndex++;
+      scheduleNextLyric();
+    }, delay);
+  }
+
+  function startLyrics() {
+    clearTimeout(lyricTimeout);
+    // Doğru satırı bul
+    currentLineIndex = lyrics.findIndex(l => l.time > audio.currentTime);
+    if (currentLineIndex === -1) {
+      currentLineIndex = lyrics.length;
+    } else if (currentLineIndex > 0) {
+      showLyric(lyrics[currentLineIndex - 1].text);
+    } else {
+      showLyric("");
     }
+    scheduleNextLyric();
+  }
 
-    function updateLyricsWithRAF() {
-      updateLyrics();
-      if (isPlaying) {
-        rafId = requestAnimationFrame(updateLyricsWithRAF);
-      }
+  function stopLyrics() {
+    clearTimeout(lyricTimeout);
+  }
+
+  function seekAudio(delta) {
+    if (!canClick) return;
+    canClick = false;
+    audio.currentTime = Math.min(Math.max(0, audio.currentTime + delta), audio.duration);
+    startLyrics(); // Seek sonrası lirikleri güncelle
+    setTimeout(() => {
+      canClick = true;
+    }, 2000);
+  }
+
+  playButton.addEventListener('click', () => {
+    if (audio.ended || audio.currentTime === audio.duration) {
+      audio.currentTime = 0;
     }
+    audio.play();
+    playButton.style.display = 'none';
+    pauseButton.style.display = 'inline-block';
+    startLyrics();
+  });
 
-    function startLyricInterval() {
-      cancelAnimationFrame(rafId);
-      updateLyricsWithRAF();
-    }
+  pauseButton.addEventListener('click', () => {
+    audio.pause();
+    pauseButton.style.display = 'none';
+    playButton.style.display = 'inline-block';
+    stopLyrics();
+  });
 
-    function stopLyricInterval() {
-      cancelAnimationFrame(rafId);
-    }
+  backButton.addEventListener('click', () => {
+    seekAudio(-10);
+  });
 
-    function seekAudio(delta) {
-      if (!canClick) return;
-      canClick = false;
-      audio.currentTime = Math.min(Math.max(0, audio.currentTime + delta), audio.duration);
-      updateLyrics();
+  forwardButton.addEventListener('click', () => {
+    seekAudio(10);
+  });
 
-      setTimeout(() => {
-        canClick = true;
-      }, 5000); // 2 saniye sonra tekrar tıklanabilir
-    }
+  audio.addEventListener('seeked', () => {
+    startLyrics();
+  });
 
-    backButton.addEventListener('click', () => {
-      seekAudio(-10);
-    });
-
-    forwardButton.addEventListener('click', () => {
-      seekAudio(10);
-    });
-
-    playButton.addEventListener('click', () => {
-      if (audio.ended || audio.currentTime === audio.duration) {
-        audio.currentTime = 0;
-      }
-      audio.play();
-      isPlaying = true;
-      playButton.style.display = 'none';
-      pauseButton.style.display = 'inline-block';
-      startLyricInterval();
-    });
-
-    pauseButton.addEventListener('click', () => {
-      audio.pause();
-      isPlaying = false;
-      pauseButton.style.display = 'none';
-      playButton.style.display = 'inline-block';
-      stopLyricInterval();
-    });
-
-    audio.addEventListener('pause', stopLyricInterval);
-    audio.addEventListener('play', startLyricInterval);
-  </script>
-
-</body>
-</html>
+  audio.addEventListener('ended', () => {
+    stopLyrics();
+  });
+</script>
