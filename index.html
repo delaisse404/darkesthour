@@ -132,11 +132,13 @@
   const forwardBtn = document.getElementById('forwardButton');
   const lyricsDiv = document.getElementById('lyrics');
 
+  // Load the audio from Google Drive
   fetch("https://docs.google.com/uc?export=download&id=1EAJE6lBERNCsmRwahnfISf-IpaabfsaR")
     .then(res => res.arrayBuffer())
     .then(data => audioContext.decodeAudioData(data))
     .then(decoded => audioBuffer = decoded);
 
+  // Play audio function
   function playAudio(offset = 0) {
     sourceNode = audioContext.createBufferSource();
     sourceNode.buffer = audioBuffer;
@@ -179,6 +181,7 @@
     }
   }
 
+  // Play button click handler
   playBtn.addEventListener('click', () => {
     audioContext.resume().then(() => {
       playBtn.style.display = "none";
@@ -187,6 +190,7 @@
     });
   });
 
+  // Pause button click handler
   pauseBtn.addEventListener('click', () => {
     pauseTime = getCurrentTime();
     stopAudio();
@@ -194,6 +198,7 @@
     pauseBtn.style.display = "none";
   });
 
+  // Back 10 seconds button
   backBtn.addEventListener('click', () => {
     if (!audioBuffer) return;
     pauseTime = Math.max(0, getCurrentTime() - 10);
@@ -201,6 +206,7 @@
     playAudio(pauseTime);
   });
 
+  // Forward 10 seconds button
   forwardBtn.addEventListener('click', () => {
     if (!audioBuffer) return;
     pauseTime = Math.min(audioBuffer.duration, getCurrentTime() + 10);
