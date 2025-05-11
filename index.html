@@ -72,18 +72,9 @@
         font-size: 1em;
       }
     }
-
-    audio {
-      display: none;
-    }
   </style>
 </head>
 <body>
-
-  <audio id="audio" preload="auto">
-    <source src="FriendsMakeGarbage.mp3" type="audio/mp3">
-    Tarayıcınız audio elementini desteklemiyor.
-  </audio>
 
   <div class="controls">
     <button id="backButton">⏪ 10s</button>
@@ -126,28 +117,80 @@
       { time: 247.0, text: "Bu satıra gülümsediğini tahmin ediyorum" },
       { time: 252.0, text: "♪" },
       { time: 253.5, text: "O hissi özlüyorum" },
-      { time: 260.0, text: "Dokunuşun, öpüşün.. Hayali zihnimde ağır bir yük gibi" },
-      { time: 268.0, text: "Hatıralarımız, ebediyen mühürlendi zamanda" },
-      { time: 276.0, text: "Sırrımız, senin olduğu kadar benim de" },
+      { time: 260.0, text: "Dokunuş, öpüşün.. hayali zihnimde ağır bir yük gibi" },
+      { time: 268.0, text: "Hatıralarımız ebediyen mühürlendi zamanda" },
+      { time: 276.0, text: "Sırrımız senin olduğu kadar benim de" },
       { time: 283.3, text: "Tüm mantığı çoktan ardımızda bıraktık" },
       { time: 290.0, text: "♪" },
       { time: 293.2, text: "Ve seni, ölünceye dek tutacağım içimde" },
       { time: 298.0, text: "♪" }
     ];
 
-    const audio = document.getElementById('audio');
-    const lyricsContainer = document.getElementById('lyrics');
+    let audioContext;
+    let sourceNode;
+    let audioBuffer;
+    let startTime = 0;
+    let offset = 0;
+    let isPlaying = false;
+    let lyricInterval;
+
     const playButton = document.getElementById('playButton');
     const pauseButton = document.getElementById('pauseButton');
     const backButton = document.getElementById('backButton');
     const forwardButton = document.getElementById('forwardButton');
+    const lyricsContainer = document.getElementById('lyrics');
 
-    let isSeeking = false;
-    let isPlaying = false;
-    let lyricFrame;
+    // Load audio file
+    async function loadAudio() {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const response = await fetch("FriendsMakeGarbage.mp3");
+      const arrayBuffer = await response.arrayBuffer();
+      audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+    }
+
+    function playAudio() {
+      if (!audioBuffer) return;
+
+      sourceNode = audioContext.createBufferSource();
+      sourceNode.buffer = audioBuffer;
+      sourceNode.connect(audioContext.destination);
+      startTime = audioContext.currentTime - offset;
+      sourceNode.start(0, offset);
+      sourceNode.onended = () => stopAudio();
+
+      isPlaying = true;
+      startLyricInterval();
+    }
+
+    function pauseAudio() {
+      if (sourceNode) sourceNode.stop();
+      offset = audioContext.currentTime - startTime;
+      isPlaying = false;
+      stopLyricInterval();
+    }
+
+    function stopAudio() {
+      offset = 0;
+      isPlaying = false;
+      stopLyricInterval();
+      playButton.style.display = 'inline-block';
+      pauseButton.style.display = 'none';
+    }
+
+    function seek(delta) {
+      offset = Math.max(0, offset + delta);
+      if (isPlaying) {
+        pauseAudio();
+        playAudio();
+      }
+    }
+
+    function getCurrentTime() {
+      return isPlaying ? (audioContext.currentTime - startTime) : offset;
+    }
 
     function updateLyrics() {
-      const currentTime = audio.currentTime;
+      const currentTime = getCurrentTime();
       let activeText = "";
 
       for (let i = 0; i < lyrics.length; i++) {
@@ -166,76 +209,31 @@
       }
     }
 
-    function updateLyricsFrame() {
-      updateLyrics();
-      if (isPlaying) {
-        lyricFrame = requestAnimationFrame(updateLyricsFrame);
-      }
-    }
-
     function startLyricInterval() {
-      lyricFrame = requestAnimationFrame(updateLyricsFrame);
+      lyricInterval = setInterval(updateLyrics, 100);
     }
 
     function stopLyricInterval() {
-      cancelAnimationFrame(lyricFrame);
+      clearInterval(lyricInterval);
     }
 
-    function disableButtons() {
-      backButton.disabled = true;
-      forwardButton.disabled = true;
-    }
-
-    function enableButtons() {
-      backButton.disabled = false;
-      forwardButton.disabled = false;
-    }
-
-    function seekAudio(delta) {
-      if (isSeeking) return;
-
-      isSeeking = true;
-      disableButtons();
-      audio.currentTime = Math.min(Math.max(0, audio.currentTime + delta), audio.duration);
-      updateLyrics();
-      setTimeout(() => {
-        isSeeking = false;
-        enableButtons();
-      }, 500);
-    }
-
-    backButton.addEventListener('click', () => {
-      seekAudio(-10);
-    });
-
-    forwardButton.addEventListener('click', () => {
-      seekAudio(10);
-    });
-
-    playButton.addEventListener('click', () => {
-      if (audio.ended || audio.currentTime === audio.duration) {
-        audio.currentTime = 0;
+    playButton.addEventListener("click", async () => {
+      if (!audioContext) {
+        await loadAudio();
       }
-      audio.pause();
-      audio.currentTime = 0;
-      setTimeout(() => {
-        audio.play();
-        isPlaying = true;
-        playButton.style.display = 'none';
-        pauseButton.style.display = 'inline-block';
-        startLyricInterval();
-      }, 100); // Mobil cihazlarda senkronu düzeltmek için gecikme
+      playAudio();
+      playButton.style.display = 'none';
+      pauseButton.style.display = 'inline-block';
     });
 
-    pauseButton.addEventListener('click', () => {
-      audio.pause();
-      isPlaying = false;
-      pauseButton.style.display = 'none';
+    pauseButton.addEventListener("click", () => {
+      pauseAudio();
       playButton.style.display = 'inline-block';
-      stopLyricInterval();
+      pauseButton.style.display = 'none';
     });
 
-    audio.addEventListener('timeupdate', updateLyrics);
+    backButton.addEventListener("click", () => seek(-10));
+    forwardButton.addEventListener("click", () => seek(10));
   </script>
 
 </body>
