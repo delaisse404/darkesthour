@@ -133,10 +133,11 @@
   const lyricsDiv = document.getElementById('lyrics');
 
   // Load the audio from Google Drive
-  fetch("https://docs.google.com/uc?export=download&id=1EAJE6lBERNCsmRwahnfISf-IpaabfsaR")
+  fetch("https://drive.google.com/uc?export=download&id=1EAJE6lBERNCsmRwahnfISf-IpaabfsaR")
     .then(res => res.arrayBuffer())
     .then(data => audioContext.decodeAudioData(data))
-    .then(decoded => audioBuffer = decoded);
+    .then(decoded => audioBuffer = decoded)
+    .catch(e => console.error("Ses yüklenemedi", e));
 
   // Play audio function
   function playAudio(offset = 0) {
