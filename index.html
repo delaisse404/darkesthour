@@ -141,18 +141,24 @@
     const pauseButton = document.getElementById('pauseButton');
     const backButton = document.getElementById('backButton');
     const forwardButton = document.getElementById('forwardButton');
-    let currentLine = -1;
 
     function updateLyrics() {
       const currentTime = audio.currentTime;
+      let activeText = "";
+
       for (let i = 0; i < lyrics.length; i++) {
-        if (currentTime >= lyrics[i].time && currentLine !== i) {
-          currentLine = i;
-          lyricsContainer.textContent = lyrics[i].text;
-          lyricsContainer.classList.remove('visible');
-          void lyricsContainer.offsetWidth; // Trigger reflow to restart animation
-          lyricsContainer.classList.add('visible');
+        if (currentTime >= lyrics[i].time) {
+          activeText = lyrics[i].text;
+        } else {
+          break;
         }
+      }
+
+      if (lyricsContainer.textContent !== activeText) {
+        lyricsContainer.textContent = activeText;
+        lyricsContainer.classList.remove('visible');
+        void lyricsContainer.offsetWidth; // Trigger reflow to restart animation
+        lyricsContainer.classList.add('visible');
       }
     }
 
@@ -172,12 +178,12 @@
     });
 
     backButton.addEventListener('click', () => {
-      audio.currentTime = Math.max(0, audio.currentTime - 10);
+      audio.currentTime = Math.max(0, audio.currentTime - 10); // Seek back 10 seconds
       updateLyrics(); // Update lyrics after seeking
     });
 
     forwardButton.addEventListener('click', () => {
-      audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+      audio.currentTime = Math.min(audio.duration, audio.currentTime + 10); // Seek forward 10 seconds
       updateLyrics(); // Update lyrics after seeking
     });
 
