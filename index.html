@@ -151,6 +151,7 @@
       const currentTime = audio.currentTime;
       let activeText = "";
 
+      // Lirikleri güncelleme
       for (let i = 0; i < lyrics.length; i++) {
         if (currentTime >= lyrics[i].time) {
           activeText = lyrics[i].text;
@@ -162,13 +163,13 @@
       if (lyricsContainer.textContent !== activeText) {
         lyricsContainer.textContent = activeText;
         lyricsContainer.classList.remove('visible');
-        void lyricsContainer.offsetWidth;
+        void lyricsContainer.offsetWidth;  // Reflow trigger
         lyricsContainer.classList.add('visible');
       }
     }
 
     function startLyricInterval() {
-      lyricInterval = setInterval(updateLyrics, 100);
+      lyricInterval = setInterval(updateLyrics, 25); // Çok daha sık güncelleme
     }
 
     function stopLyricInterval() {
