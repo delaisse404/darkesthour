@@ -188,7 +188,7 @@
     }
 
     function seekAudio(delta) {
-      if (isSeeking || isPlaying) return; // Prevent seeking during playback
+      if (isSeeking || !isPlaying) return; // Only allow seeking if playing and not seeking already
 
       isSeeking = true;
       disableButtons();
@@ -230,4 +230,5 @@
     audio.addEventListener('timeupdate', updateLyrics);
   </script>
 
-</body
+</body>
+</html>
