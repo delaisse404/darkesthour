@@ -95,7 +95,7 @@
 <body>
 
   <audio id="audio">
-    <source src="FriendsMakeGarbage.mp3" type="audio/mp3">
+    <source src="LowRoarDarkestHour.mp3" type="audio/mp3">
     Tarayıcınız audio elementini desteklemiyor.
   </audio>
 
@@ -106,46 +106,41 @@
 
   <div class="lyrics" id="lyrics">Sözler burada çıkacak...</div>
 
-  <script>
-    const lyrics = [
-      { time: 0.0, text: "♪" },
-      { time: 27.3, text: "Çocuktuk sadece" },
-      { time: 34.0, text: "Hayallerimiz ve kalplerimiz aynı ritimdeydi" },
-      { time: 40.3, text: "♪" },
-      { time: 43.0, text: "Atla gemimize" },
-      { time: 49.0, text: "İstesen de istemesen de gidiyoruz" },
-      { time: 59.1, text: "İstesen de istemesen de" },
-      { time: 65.0, text: "♪" },
-      { time: 85.0, text: "Denize yelken açtık" },
-      { time: 91.5, text: "Amaçsızca," },
-      { time: 94.0, text: "bir yönümüz ya da takvimimiz olmadan" },
-      { time: 99.30, text: "Varmaya çalıştığımız kıyı" },
-      { time: 107.00, text: "Önceden de görmüştük, konuşmadan ya da tek kelime paylaşmadan" },
-      { time: 115.00, text: "Gerek yok duyulmasına gerçek düşüncelerinin" },
-      { time: 124.50, text: "Sen, kelimelerle tarif edilemeyecek kadar güzelsin" },
-      { time: 132.00, text: "♪" },
-      { time: 150.0, text: "Gitme altınlarla döşenmiş yollardan" },
-      { time: 159.0, text: "Seni hüsrana uğratacak onlar" },
-      { time: 164.5, text: "Bulduklarını paylaşmazsan eğer, bunun ne eğlencesi var" },
-      { time: 172.1, text: "İnşa etmesi yıllar sürer, saniyeler içinde yıkılır" },
-      { time: 181.0, text: "Kimse beni teselli etmeyecek" },
-      { time: 187.0, text: "Beni tanımayacak ya da içimde ne olup bittiğini bilmeyecek" },
-      { time: 195.15, text: "Terkedilmiş bir boşluk, kalacak eskisi gibi" },
-      { time: 203.0, text: "Bana orada bir zamanlar yalanlar olduğunu hatırlatacak" },
-      { time: 210.05, text: "♪" },
-      { time: 231.0, text: "Bununla yaşarken öğrendim" },
-      { time: 237.0, text: "Hayatım boyunca okuduklarımdan daha fazlasını" },
-      { time: 247.0, text: "Bu satıra gülümsediğini tahmin ediyorum" },
-      { time: 252.0, text: "♪" },
-      { time: 253.5, text: "O hissi özlüyorum" },
-      { time: 260.0, text: "Dokunuşun, öpüşün.. hayali zihnimde ağır bir iz bıraktı" },
-      { time: 268.0, text: "Hatıralarımız, ebediyen mühürlendi zamanda" },
-      { time: 276.0, text: "Sırrımız, senin olduğu kadar benim de" },
-      { time: 283.3, text: "Tüm mantığı çoktan ardımızda bıraktık" },
-      { time: 290.0, text: "♪" },
-      { time: 293.2, text: "Ve seni, ölünceye dek tutacağım içimde" },
-      { time: 298.0, text: "♪" }
-    ];
+ <script>
+  const lyrics = [
+    { time: 0.00, text: "♪" },
+    { time: 0.21, text: "Ev çok uzakta," },
+    { time: 0.25, text: "Ve ben evimden çok uzağım" },
+    { time: 0.30, text: "Düşmanlarım yakında," },
+    { time: 0.34, text: "Ama hâlâ dokunamıyorum" },
+    { time: 0.38, text: "En çok istediğim şeye" },
+    { time: 0.42, text: "♪" },
+    { time: 0.45, text: "Ve en karanlık saatimde" },
+    { time: 0.48, text: "♪" },
+    { time: 0.53, text: "En aydınlık ışığım parlar" },
+    { time: 0.56, text: "♪" },
+    { time: 1.00, text: "Ve adımı söylediklerinde" },
+    { time: 1.05, text: "Sadece seni tanıdığım için minnettarım, bebeğim" },
+    { time: 1.10, text: "♪" },
+    { time: 1.19, text: "Benim hatam değildi" },
+    { time: 1.23, text: "O boşluğu hiç dolduramamak" },
+    { time: 1.27, text: "Nefret değil, sevgiydi" },
+    { time: 1.30, text: "Canımı en çok yakan şeyi" },
+    { time: 1.34, text: "Yaralamama sebep olan" },
+    { time: 1.40, text: "♪" },
+    { time: 1.43, text: "Ve en karanlık saatimde" },
+    { time: 1.46, text: "♪" },
+    { time: 1.50, text: "En aydınlık ışığım parlar" },
+    { time: 1.53, text: "♪" },
+    { time: 1.58, text: "Ve güvercinler havalanırken" },
+    { time: 2.03, text: "Sadece seni tanıdığım için minnettarım, bebeğim" },
+    { time: 2.08, text: "♪" },
+    { time: 2.33, text: "Bu, yerine konulamaz bir sevgi" },
+    { time: 2.40, text: "Zaman ve mekânda yakalanmış bir an" },
+    { time: 2.46, text: "Sadece seni tanıdığım için minnettarım, bebeğim" },
+    { time: 2.51, text: "♪" }
+  ];
+
 
     const audio = document.getElementById('audio');
     const lyricsContainer = document.getElementById('lyrics');
