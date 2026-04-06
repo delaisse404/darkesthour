@@ -100,6 +100,7 @@
   <div class="lyrics" id="lyrics">Sözler burada çıkacak...</div>
 
 <script>
+// Dakika.Saniye.Milisaniye formatından Toplam Saniye'ye dönüştürülmüş liste
 const lyrics = [
   { time: 0.0, text: "♪" },
   { time: 39.0, text: "Dolabımı yapraklarla dolduruyorum," },
@@ -108,16 +109,16 @@ const lyrics = [
   { time: 52.0, text: "♪" },
   { time: 54.0, text: "Beni odanın bir ucundan diğerine dans ettir sevgilim," },
   { time: 59.0, text: "Kollarında salla beni." },
-  { time: 69.0, text: "Uykuyu cezbetmek için kedi otu kökü..." },
-  { time: 76.0, text: "Uyku parça parça gelir, sonra öyle derine dalar ki;" },
-  { time: 80.0, text: "Rüyalarım..." },
-  { time: 81.5, text: "Düşlerimde kolum kemiğine kadar kesilmişti," },
-  { time: 84.8, text: "Fırlatılan bir bıçak ve biri yerde..." },
-  { time: 87.0, text: "Neredeyse uyanamıyordum." },
-  { time: 91.3, text: "Aslanpençesi," },
-  { time: 94.9, text: "Felsefe taşı," },
-  { time: 99.0, text: "Bir kavanozda kurutulmuş ısırgan otları;" },
-  { time: 102.0, text: "O sızı ve o kışkırtma..." }
+  { time: 69.0, text: "Uykuyu cezbetmek için kedi otu kökü..." }, // 1.09
+  { time: 76.0, text: "Uyku parça parça gelir, sonra öyle derine dalar ki;" }, // 1.16
+  { time: 80.0, text: "Rüyalarım..." }, // 1.20
+  { time: 81.5, text: "Düşlerimde kolum kemiğine kadar kesilmişti," }, // 1.21.5
+  { time: 84.8, text: "Fırlatılan bir bıçak ve biri yerde..." }, // 1.24.8
+  { time: 87.0, text: "Neredeyse uyanamıyordum." }, // 1.27
+  { time: 91.3, text: "Aslanpençesi," }, // 1.31.3
+  { time: 94.9, text: "Felsefe taşı," }, // 1.34.9
+  { time: 99.0, text: "Bir kavanozda kurutulmuş ısırgan otları;" }, // 1.39
+  { time: 102.0, text: "O sızı ve o kışkırtma..." } // 1.42
 ];
 
     const audio = document.getElementById('audio');
@@ -151,7 +152,7 @@ const lyrics = [
       audio.play();
       playButton.style.display = 'none';
       pauseButton.style.display = 'inline-block';
-      lyricInterval = setInterval(updateLyrics, 100);
+      lyricInterval = setInterval(updateLyrics, 50); // Hassasiyet için 50ms'de bir kontrol
     });
 
     pauseButton.addEventListener('click', () => {
