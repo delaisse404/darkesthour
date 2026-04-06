@@ -2,9 +2,9 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <title>İyi Geceler Sevde</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -18,34 +18,30 @@
       overflow: hidden;
       position: relative;
       height: 100vh;
-      background-image: url('https://github.com/delaisse404/darkesthour/raw/main/ezgif.com-effects (1).gif'); /* Arka plan fotoğrafı URL */
-      background-size: cover; /* Fotoğrafın boyutunu sayfaya uyacak şekilde ayarlar */
-      background-position: center; /* Fotoğrafın merkezden hizalanmasını sağlar */
-      background-attachment: fixed; /* Arka planın sabitlenmesini sağlar */
+      background-image: url('https://github.com/delaisse404/darkesthour/raw/main/ezgif.com-effects (1).gif'); 
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
     }
 
     .lyrics {
       position: absolute;
-      top: 30%; /* Lirikleri biraz daha aşağıya aldım */
+      top: 30%;
       width: 100%;
       text-align: center;
       font-size: 2.3em;
       font-style: italic;
-      font-weight: bold; /* Yazı tipi kalın yapıldı */
+      font-weight: bold;
       opacity: 0;
       transition: opacity 1.2s ease-in-out;
       z-index: 2;
       padding: 0 10px;
       box-sizing: border-box;
       text-shadow:
-    -1px -1px 0 #000,
-     1px -1px 0 #000,
-    -1px  1px 0 #000,
-     1px  1px 0 #000,
-     0px -1px 0 #000,
-     0px  1px 0 #000,
-    -1px  0px 0 #000,
-     1px  0px 0 #000;/* Siyah dış kenarlık eklendi */
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000;
     }
 
     .lyrics.visible {
@@ -54,7 +50,7 @@
 
     .controls {
       position: absolute;
-      top: 65%;
+      top: 70%;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -79,15 +75,8 @@
         font-size: 1.6em;
         top: 15%;
       }
-
       .controls {
         top: 75%;
-        flex-direction: row;
-      }
-
-      .controls button {
-        padding: 12px 20px;
-        font-size: 1em;
       }
     }
 
@@ -99,7 +88,7 @@
 <body>
 
   <audio id="audio">
-    <source src="LowRoarDarkestHour.mp3" type="audio/mp3">
+    <source src="My Dreams - Black Sea Dahu.mp3" type="audio/mp3">
     Tarayıcınız audio elementini desteklemiyor.
   </audio>
 
@@ -110,48 +99,24 @@
 
   <div class="lyrics" id="lyrics">Sözler burada çıkacak...</div>
 
- <script>
- const lyrics = [
+<script>
+// Verdiğin saniyelere göre güncellenmiş liste
+const lyrics = [
   { time: 0.0, text: "♪" },
-  { time: 21.0, text: "Ev çok uzakta" },
-  { time: 25.0, text: "Ve ben evimden çok uzağım" },
-  { time: 30.0, text: "Düşmanlarım yakında" },
-  { time: 34.0, text: "Ama hâlâ dokunamıyorum" },
-  { time: 38.0, text: "En çok istediğim şeye" },
-  { time: 42.0, text: "♪" },
-  { time: 45.0, text: "Ve en karanlık saatimde" },
-  { time: 48.0, text: "♪" },
-  { time: 53.0, text: "En aydınlık ışığım parlar" },
-  { time: 56.0, text: "♪" },
-  { time: 60.0, text: "Ve adımı söylediklerinde" },
-  { time: 65.0, text: "Sadece seni tanıdığım için minnettarım, bebeğim" },
-  { time: 70.0, text: "♪" },
-  { time: 79.0, text: "Benim hatam değildi" },
-  { time: 83.0, text: "O boşluğu hiç dolduramamak" },
-  { time: 87.0, text: "Nefret değil, sevgiydi" },
-  { time: 90.0, text: "Canımı en çok yakan şeyi" },
-  { time: 94.0, text: "Yaralamama sebep olan" },
-  { time: 100.0, text: "♪" },
-  { time: 103.0, text: "Ve en karanlık saatimde" },
-  { time: 106.0, text: "♪" },
-  { time: 110.0, text: "En aydınlık ışığım parlar" },
-  { time: 113.0, text: "♪" },
-  { time: 118.0, text: "Ve güvercinler havalanırken" },
-  { time: 123.0, text: "Sadece seni tanıdığım için minnettarım, bebeğim" },
-  { time: 128.0, text: "♪" },
-  { time: 153.0, text: "Bu, yerine konulamaz bir sevgi" },
-  { time: 160.0, text: "Zaman ve mekânda yakalanmış bir an" },
-  { time: 166.0, text: "Sadece seni tanıdığım için minnettarım, bebeğim" },
-  { time: 171.0, text: "♪" }
+  { time: 39.0, text: "Dolabımı yapraklarla dolduruyorum" },
+  { time: 46.0, text: "Donup kaldım öylece" },
+  { time: 50.0, text: "Tüm hazinemi saklıyorum" },
+  { time: 52.0, text: "♪" },
+  { time: 54.0, text: "Beni odanın bir ucundan diğerine dans ettir sevgilim" },
+  { time: 59.0, text: "Kollarında salla beni" },
+  { time: 69.0, text: "Uykuyu cezbetmek için kedi otu kökü..." }
 ];
-
 
     const audio = document.getElementById('audio');
     const lyricsContainer = document.getElementById('lyrics');
     const playButton = document.getElementById('playButton');
     const pauseButton = document.getElementById('pauseButton');
 
-    let isPlaying = false;
     let lyricInterval;
 
     function updateLyrics() {
@@ -169,40 +134,31 @@
       if (lyricsContainer.textContent !== activeText) {
         lyricsContainer.textContent = activeText;
         lyricsContainer.classList.remove('visible');
-        void lyricsContainer.offsetWidth;
+        void lyricsContainer.offsetWidth; 
         lyricsContainer.classList.add('visible');
       }
     }
 
-    function startLyricInterval() {
-      lyricInterval = setInterval(updateLyrics, 100);
-    }
-
-    function stopLyricInterval() {
-      clearInterval(lyricInterval);
-    }
-
     playButton.addEventListener('click', () => {
-      if (audio.ended || audio.currentTime >= audio.duration - 0.1) {
-        audio.currentTime = 0;
-        lyricsContainer.textContent = "";
-      }
       audio.play();
-      isPlaying = true;
       playButton.style.display = 'none';
       pauseButton.style.display = 'inline-block';
-      startLyricInterval();
+      lyricInterval = setInterval(updateLyrics, 100);
     });
 
     pauseButton.addEventListener('click', () => {
       audio.pause();
-      isPlaying = false;
       pauseButton.style.display = 'none';
       playButton.style.display = 'inline-block';
-      stopLyricInterval();
+      clearInterval(lyricInterval);
     });
 
-    audio.addEventListener('timeupdate', updateLyrics);
+    audio.addEventListener('ended', () => {
+      playButton.style.display = 'inline-block';
+      pauseButton.style.display = 'none';
+      clearInterval(lyricInterval);
+      lyricsContainer.textContent = "♪";
+    });
   </script>
 
 </body>
